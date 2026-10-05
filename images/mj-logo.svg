@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <!-- Metallic Gold Linear Gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE885" />
+      <stop offset="25%" stop-color="#F5B838" />
+      <stop offset="50%" stop-color="#FFF3B0" />
+      <stop offset="75%" stop-color="#C68C1D" />
+      <stop offset="100%" stop-color="#8F5E0A" />
+    </linearGradient>
+
+    <!-- Outer Gold Ring Gradient -->
+    <linearGradient id="ringGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8F5E0A" />
+      <stop offset="30%" stop-color="#FFE885" />
+      <stop offset="50%" stop-color="#C68C1D" />
+      <stop offset="70%" stop-color="#FFF3B0" />
+      <stop offset="100%" stop-color="#8F5E0A" />
+    </linearGradient>
+
+    <!-- Deep Luxury Black Radial Gradient -->
+    <radialGradient id="darkBg" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#222834" />
+      <stop offset="70%" stop-color="#0F131A" />
+      <stop offset="100%" stop-color="#05070A" />
+    </radialGradient>
+
+    <!-- Drop Shadow Filter -->
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#F5B838" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <!-- Outer Circular Shadow Rim -->
+  <circle cx="100" cy="100" r="96" fill="#000000" />
+  
+  <!-- Outer Gold Rim -->
+  <circle cx="100" cy="100" r="94" fill="none" stroke="url(#ringGrad)" stroke-width="5" />
+  
+  <!-- Main Inner Dark Background -->
+  <circle cx="100" cy="100" r="89" fill="url(#darkBg)" />
+
+  <!-- Inner Delicate Dotted Gold Ring -->
+  <circle cx="100" cy="100" r="83" fill="none" stroke="url(#goldGrad)" stroke-width="1.5" stroke-dasharray="3, 3" opacity="0.8" />
+  <circle cx="100" cy="100" r="80" fill="none" stroke="url(#goldGrad)" stroke-width="0.7" opacity="0.6" />
+
+  <!-- Golden Crown at Top -->
+  <g filter="url(#goldGlow)">
+    <path d="M78 58 L85 45 L94 54 L100 38 L106 54 L115 45 L122 58 Z" fill="url(#goldGrad)" />
+    <!-- Crown Base Band -->
+    <rect x="76" y="58" width="48" height="4" rx="2" fill="url(#goldGrad)" />
+    <!-- Crown Jewels / Dots -->
+    <circle cx="85" cy="43" r="2.2" fill="#FFF3B0" />
+    <circle cx="100" cy="36" r="2.8" fill="#FFF3B0" />
+    <circle cx="115" cy="43" r="2.2" fill="#FFF3B0" />
+    <circle cx="88" cy="60" r="1.2" fill="#8F5E0A" />
+    <circle cx="100" cy="60" r="1.4" fill="#8F5E0A" />
+    <circle cx="112" cy="60" r="1.2" fill="#8F5E0A" />
+  </g>
+
+  <!-- Luxury Monogram "M" and "J" Intertwined -->
+  <!-- "M" Character -->
+  <text x="76" y="128" 
+        font-family="'Playfair Display', 'Cinzel', 'Times New Roman', serif" 
+        font-size="64" 
+        font-weight="900" 
+        text-anchor="middle" 
+        fill="url(#goldGrad)" 
+        filter="url(#goldGlow)"
+        letter-spacing="-1">M</text>
+
+  <!-- "J" Character slightly overlapping -->
+  <text x="122" y="132" 
+        font-family="'Playfair Display', 'Cinzel', 'Times New Roman', serif" 
+        font-size="68" 
+        font-weight="900" 
+        text-anchor="middle" 
+        fill="url(#goldGrad)" 
+        filter="url(#goldGlow)">J</text>
+
+  <!-- Bottom Decorative Banner Ribbon -->
+  <g filter="url(#goldGlow)">
+    <!-- Banner Wings & Center -->
+    <path d="M48 152 Q100 144 152 152 L148 166 Q100 158 52 166 Z" fill="url(#goldGrad)" />
+    <path d="M48 152 L40 160 L52 166 L49 159 Z" fill="#8F5E0A" />
+    <path d="M152 152 L160 160 L148 166 L151 159 Z" fill="#8F5E0A" />
+    <!-- Banner Border Outline -->
+    <path d="M48 152 Q100 144 152 152" fill="none" stroke="#FFE885" stroke-width="0.8" />
+    <path d="M52 166 Q100 158 148 166" fill="none" stroke="#FFE885" stroke-width="0.8" />
+  </g>
+
+  <!-- Banner Text "MEHAR JAMEEL" -->
+  <text x="100" y="161.5" 
+        font-family="'Montserrat', 'Arial', sans-serif" 
+        font-size="7.5" 
+        font-weight="900" 
+        letter-spacing="2.2" 
+        text-anchor="middle" 
+        fill="#1A1D24">MEHAR JAMEEL</text>
+
+  <!-- Tiny Gold Star Accents under banner -->
+  <circle cx="92" cy="173" r="1.2" fill="url(#goldGrad)" />
+  <polygon points="100,170 101.5,173.5 105,174 102.5,176.5 103,180 100,178 97,180 97.5,176.5 95,174 98.5,173.5" fill="url(#goldGrad)" />
+  <circle cx="108" cy="173" r="1.2" fill="url(#goldGrad)" />
+</svg>
