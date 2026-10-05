@@ -8,7 +8,7 @@ const ADMIN_PASS = "admin123";
 const ALL_WORKSPACE_TABS = [
     'dashboard', 'analytics', 'reports', 'products', 'inventory', 
     'orders', 'categories', 'customers', 'reviews', 'messages', 
-    'coupons', 'notifications', 'settings'
+    'coupons', 'notifications', 'settings', 'hero-banner'
 ];
 
 let currentAdminTab = 'dashboard';
@@ -152,6 +152,9 @@ function switchAdminTab(tab) {
             break;
         case 'settings':
             loadSettingsForm();
+            break;
+        case 'hero-banner':
+            renderHeroBannerTab();
             break;
     }
 }
@@ -3970,3 +3973,172 @@ function copySupabaseSQL() {
     }
 }
 
+
+
+// ================================================================
+// MODULE 14: HERO BANNER & TOY SHOWCASE MANAGER CONTROLLER
+// ================================================================
+
+const DEFAULT_HERO_CONFIG = {
+    imageUrl: "https://images.unsplash.com/photo-1594787318286-3d835c1d207f?auto=format&fit=crop&w=800&q=80",
+    tag: "⚡ LUXURY FLASH SALE • LIMITED STOCK",
+    headline: "ROYAL TOYS GALA",
+    subheadline: "UP TO 50% OFF",
+    description: "Pakistan's finest 4x4 RC stunt cars, Montessori educational blocks, robotics & premium soft plush toys. 100% Original with Cash on Delivery!",
+    price: "Rs. 3,499",
+    oldPrice: "Rs. 4,500",
+    discount: "40% OFF"
+};
+
+function getHeroBannerConfig() {
+    try {
+        const stored = localStorage.getItem('mehar_toys_hero_config');
+        if (stored) return JSON.parse(stored);
+    } catch(e) {
+        console.warn('Error reading hero banner config:', e);
+    }
+    return DEFAULT_HERO_CONFIG;
+}
+
+function renderHeroBannerTab() {
+    const config = getHeroBannerConfig();
+
+    const inputUrl = document.getElementById('hero-input-image-url');
+    const inputTag = document.getElementById('hero-input-tag');
+    const inputHeadline = document.getElementById('hero-input-headline');
+    const inputSubheadline = document.getElementById('hero-input-subheadline');
+    const inputDesc = document.getElementById('hero-input-description');
+    const inputPrice = document.getElementById('hero-input-price');
+    const inputOldPrice = document.getElementById('hero-input-oldprice');
+    const inputDiscount = document.getElementById('hero-input-discount');
+
+    if (inputUrl) inputUrl.value = config.imageUrl || '';
+    if (inputTag) inputTag.value = config.tag || '';
+    if (inputHeadline) inputHeadline.value = config.headline || '';
+    if (inputSubheadline) inputSubheadline.value = config.subheadline || '';
+    if (inputDesc) inputDesc.value = config.description || '';
+    if (inputPrice) inputPrice.value = config.price || '';
+    if (inputOldPrice) inputOldPrice.value = config.oldPrice || '';
+    if (inputDiscount) inputDiscount.value = config.discount || '';
+
+    updateHeroAdminPreview();
+}
+
+function updateHeroAdminPreview() {
+    const inputUrl = document.getElementById('hero-input-image-url');
+    const inputTag = document.getElementById('hero-input-tag');
+    const inputHeadline = document.getElementById('hero-input-headline');
+    const inputSubheadline = document.getElementById('hero-input-subheadline');
+    const inputDesc = document.getElementById('hero-input-description');
+    const inputPrice = document.getElementById('hero-input-price');
+    const inputOldPrice = document.getElementById('hero-input-oldprice');
+    const inputDiscount = document.getElementById('hero-input-discount');
+
+    const previewImg = document.getElementById('preview-admin-img');
+    const previewTag = document.getElementById('preview-admin-tag');
+    const previewHeadline = document.getElementById('preview-admin-headline');
+    const previewSubheadline = document.getElementById('preview-admin-subheadline');
+    const previewDesc = document.getElementById('preview-admin-desc');
+    const previewPrice = document.getElementById('preview-admin-price');
+    const previewOldPrice = document.getElementById('preview-admin-oldprice');
+    const previewDiscount = document.getElementById('preview-admin-discount');
+
+    if (previewImg && inputUrl) previewImg.src = inputUrl.value || DEFAULT_HERO_CONFIG.imageUrl;
+    if (previewTag && inputTag) previewTag.textContent = inputTag.value || DEFAULT_HERO_CONFIG.tag;
+    if (previewHeadline && inputHeadline) previewHeadline.textContent = inputHeadline.value || DEFAULT_HERO_CONFIG.headline;
+    if (previewSubheadline && inputSubheadline) previewSubheadline.textContent = inputSubheadline.value || DEFAULT_HERO_CONFIG.subheadline;
+    if (previewDesc && inputDesc) previewDesc.textContent = inputDesc.value || DEFAULT_HERO_CONFIG.description;
+    if (previewPrice && inputPrice) previewPrice.textContent = inputPrice.value || DEFAULT_HERO_CONFIG.price;
+    if (previewOldPrice && inputOldPrice) previewOldPrice.textContent = inputOldPrice.value || DEFAULT_HERO_CONFIG.oldPrice;
+    if (previewDiscount && inputDiscount) previewDiscount.textContent = inputDiscount.value || DEFAULT_HERO_CONFIG.discount;
+}
+
+function handleHeroInputChange() {
+    updateHeroAdminPreview();
+}
+
+function handleHeroFileUpload(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+        alert('Please choose a valid image file (JPG, PNG, WEBP, etc.)');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        const inputUrl = document.getElementById('hero-input-image-url');
+        if (inputUrl) {
+            inputUrl.value = dataUrl;
+            updateHeroAdminPreview();
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+function selectHeroPreset(url, name, price, oldPrice, discount) {
+    const inputUrl = document.getElementById('hero-input-image-url');
+    const inputPrice = document.getElementById('hero-input-price');
+    const inputOldPrice = document.getElementById('hero-input-oldprice');
+    const inputDiscount = document.getElementById('hero-input-discount');
+
+    if (inputUrl) inputUrl.value = url;
+    if (price && inputPrice) inputPrice.value = price;
+    if (oldPrice && inputOldPrice) inputOldPrice.value = oldPrice;
+    if (discount && inputDiscount) inputDiscount.value = discount;
+
+    updateHeroAdminPreview();
+}
+
+function saveHeroBannerSettings() {
+    const inputUrl = document.getElementById('hero-input-image-url');
+    const inputTag = document.getElementById('hero-input-tag');
+    const inputHeadline = document.getElementById('hero-input-headline');
+    const inputSubheadline = document.getElementById('hero-input-subheadline');
+    const inputDesc = document.getElementById('hero-input-description');
+    const inputPrice = document.getElementById('hero-input-price');
+    const inputOldPrice = document.getElementById('hero-input-oldprice');
+    const inputDiscount = document.getElementById('hero-input-discount');
+
+    const config = {
+        imageUrl: (inputUrl && inputUrl.value) ? inputUrl.value : DEFAULT_HERO_CONFIG.imageUrl,
+        tag: (inputTag && inputTag.value) ? inputTag.value : DEFAULT_HERO_CONFIG.tag,
+        headline: (inputHeadline && inputHeadline.value) ? inputHeadline.value : DEFAULT_HERO_CONFIG.headline,
+        subheadline: (inputSubheadline && inputSubheadline.value) ? inputSubheadline.value : DEFAULT_HERO_CONFIG.subheadline,
+        description: (inputDesc && inputDesc.value) ? inputDesc.value : DEFAULT_HERO_CONFIG.description,
+        price: (inputPrice && inputPrice.value) ? inputPrice.value : DEFAULT_HERO_CONFIG.price,
+        oldPrice: (inputOldPrice && inputOldPrice.value) ? inputOldPrice.value : DEFAULT_HERO_CONFIG.oldPrice,
+        discount: (inputDiscount && inputDiscount.value) ? inputDiscount.value : DEFAULT_HERO_CONFIG.discount,
+        updatedAt: new Date().toISOString()
+    };
+
+    localStorage.setItem('mehar_toys_hero_config', JSON.stringify(config));
+
+    // Also trigger custom storage event so active store tabs update
+    try {
+        window.dispatchEvent(new Event('storage'));
+    } catch(e) {}
+
+    // Show friendly success toast/alert
+    alert("✅ Zabardast! Hero Banner ki car image aur details kamyabi se save ho gayi hain. Website par live change ho chuki hai!");
+}
+
+function resetHeroBannerDefaults() {
+    if (confirm("Kya aap Hero Banner ko default setting par reset karna chahte hain?")) {
+        localStorage.setItem('mehar_toys_hero_config', JSON.stringify(DEFAULT_HERO_CONFIG));
+        renderHeroBannerTab();
+        alert("Hero Banner default settings par restore ho gaya!");
+    }
+}
+
+// Expose functions globally for inline HTML event handlers
+window.getHeroBannerConfig = getHeroBannerConfig;
+window.renderHeroBannerTab = renderHeroBannerTab;
+window.updateHeroAdminPreview = updateHeroAdminPreview;
+window.handleHeroInputChange = handleHeroInputChange;
+window.handleHeroFileUpload = handleHeroFileUpload;
+window.selectHeroPreset = selectHeroPreset;
+window.saveHeroBannerSettings = saveHeroBannerSettings;
+window.resetHeroBannerDefaults = resetHeroBannerDefaults;

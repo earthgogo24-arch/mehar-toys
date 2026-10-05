@@ -11,6 +11,7 @@ let paymentSlipBase64 = null; // Stored payment screenshot
 // Initialize App on DOM Load
 document.addEventListener('DOMContentLoaded', () => {
     initCustomerPortal();
+    loadHeroBannerConfig();
     PRODUCTS = getProducts();
     initStoreInfo();
     initAnnouncementBar();
@@ -25,6 +26,46 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ----------------------------------------------------------------
+
+// ----------------------------------------------------------------
+// DYNAMIC HERO BANNER LOADER (SYNCED WITH ADMIN PANEL)
+// ----------------------------------------------------------------
+function loadHeroBannerConfig() {
+    try {
+        const stored = localStorage.getItem('mehar_toys_hero_config');
+        if (!stored) return;
+        const config = JSON.parse(stored);
+        if (!config) return;
+
+        const imgEl = document.getElementById('hero-banner-image');
+        const tagEl = document.getElementById('hero-banner-tag');
+        const headlineEl = document.getElementById('hero-banner-headline');
+        const subheadlineEl = document.getElementById('hero-banner-subheadline');
+        const descEl = document.getElementById('hero-banner-description');
+        const discountTextEl = document.getElementById('hero-banner-discount-text');
+        const priceEl = document.getElementById('hero-banner-price');
+        const oldPriceEl = document.getElementById('hero-banner-oldprice');
+
+        if (config.imageUrl && imgEl) imgEl.src = config.imageUrl;
+        if (config.tag && tagEl) tagEl.textContent = config.tag;
+        if (config.headline && headlineEl) headlineEl.textContent = config.headline;
+        if (config.subheadline && subheadlineEl) subheadlineEl.textContent = config.subheadline;
+        if (config.description && descEl) descEl.textContent = config.description;
+        if (config.discount && discountTextEl) discountTextEl.textContent = config.discount;
+        if (config.price && priceEl) priceEl.textContent = config.price;
+        if (config.oldPrice && oldPriceEl) oldPriceEl.textContent = config.oldPrice;
+    } catch(err) {
+        console.warn('Hero banner config load error:', err);
+    }
+}
+window.loadHeroBannerConfig = loadHeroBannerConfig;
+
+window.addEventListener('storage', (e) => {
+    if (!e.key || e.key === 'mehar_toys_hero_config') {
+        loadHeroBannerConfig();
+    }
+});
+
 // FLASH SALE & DARAZ-STYLE LUXURY HELPERS
 // ----------------------------------------------------------------
 function scrollToFlashSale() {
@@ -1818,9 +1859,9 @@ function initCustomerPortal() {
 
     // Initialize Notifications
     let notifs = JSON.parse(localStorage.getItem('mehar_toys_notifications'));
-    if (!notifs || notifs.length === 0) {
+    if (!notifs) {
         notifs = [
-            { id: 1, title: '🎁 Welcome to Mehar Toys', message: 'Use voucher WELCOME10 for 10% OFF on all creative toys.', time: 'Just now', read: false, icon: 'fa-gift' }
+            { id: 1, title: '🎁 Welcome to Mehar Toys', message: 'Use voucher WELCOME10 for 10% OFF on all creative toys.', time: 'Just now', read: true, icon: 'fa-gift' }
         ];
         localStorage.setItem('mehar_toys_notifications', JSON.stringify(notifs));
     }
@@ -1849,22 +1890,46 @@ function updateAuthUI() {
     const bottomGuestIcon = document.getElementById('bottom-guest-icon');
     const bottomAccountText = document.getElementById('bottom-account-text');
     const bottomWishlistBadge = document.getElementById('bottom-wishlist-badge');
+    const bottomNotifBadge = document.getElementById('bottom-notif-badge');
 
     const wishlist = getWishlist();
     const notifs = JSON.parse(localStorage.getItem('mehar_toys_notifications')) || [];
     const unreadNotifs = notifs.filter(n => !n.read).length || 0;
 
-    if (headerWishlistBadge) headerWishlistBadge.textContent = wishlist.length;
+    if (headerWishlistBadge) {
+        headerWishlistBadge.textContent = wishlist.length;
+        headerWishlistBadge.classList.toggle('hidden', wishlist.length === 0);
+    }
     if (dropdownWishlistCount) dropdownWishlistCount.textContent = wishlist.length;
-    if (portalTopWishlistBadge) portalTopWishlistBadge.textContent = wishlist.length;
+    if (portalTopWishlistBadge) {
+        portalTopWishlistBadge.textContent = wishlist.length;
+        portalTopWishlistBadge.classList.toggle('hidden', wishlist.length === 0);
+    }
     if (bottomWishlistBadge) {
         bottomWishlistBadge.textContent = wishlist.length;
         bottomWishlistBadge.classList.toggle('hidden', wishlist.length === 0);
     }
 
-    if (headerNotifBadge) headerNotifBadge.textContent = unreadNotifs;
+    const sidebarWishlistCount = document.getElementById('sidebar-wishlist-count');
+    const wishlistTabCount = document.getElementById('wishlist-tab-count');
+    if (sidebarWishlistCount) sidebarWishlistCount.textContent = wishlist.length;
+    if (wishlistTabCount) wishlistTabCount.textContent = wishlist.length;
+
+    if (headerNotifBadge) {
+        headerNotifBadge.textContent = unreadNotifs;
+        headerNotifBadge.classList.toggle('hidden', unreadNotifs === 0);
+    }
+    if (bottomNotifBadge) {
+        bottomNotifBadge.textContent = unreadNotifs;
+        bottomNotifBadge.classList.toggle('hidden', unreadNotifs === 0);
+    }
     if (dropdownNotifCount) dropdownNotifCount.textContent = unreadNotifs;
-    if (portalTopNotifBadge) portalTopNotifBadge.textContent = unreadNotifs;
+    if (portalTopNotifBadge) {
+        portalTopNotifBadge.textContent = unreadNotifs;
+        portalTopNotifBadge.classList.toggle('hidden', unreadNotifs === 0);
+    }
+    const sidebarNotifCount = document.getElementById('sidebar-notif-count');
+    if (sidebarNotifCount) sidebarNotifCount.textContent = unreadNotifs;
 
     if (customer) {
         if (guestArea) guestArea.classList.add('hidden');
