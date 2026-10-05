@@ -14,13 +14,165 @@ document.addEventListener('DOMContentLoaded', () => {
     PRODUCTS = getProducts();
     initStoreInfo();
     initAnnouncementBar();
+    initCountdownClocks();
     renderCategories();
     renderProducts();
+    renderFlashShelf();
     updateCartUI();
     updateAuthUI();
     init3DHeroParallax();
     setupEventListeners();
 });
+
+// ----------------------------------------------------------------
+// FLASH SALE & DARAZ-STYLE LUXURY HELPERS
+// ----------------------------------------------------------------
+function scrollToFlashSale() {
+    const el = document.getElementById('flash-sale-section');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+window.scrollToFlashSale = scrollToFlashSale;
+
+function filterUnderPrice(maxPrice) {
+    currentCategory = 'all';
+    searchQuery = '';
+    renderCategories();
+    renderProducts();
+    const container = document.getElementById('products-grid');
+    if (container) {
+        const filtered = getProducts().filter(p => p.price <= maxPrice);
+        if (filtered.length > 0) {
+            container.innerHTML = filtered.map(prod => `
+                <div class="toy-card bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-md hover:shadow-xl flex flex-col justify-between relative group border border-gray-100 transition-all duration-300">
+                    <div class="absolute top-2 left-2 z-10 bg-amber-500 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs">
+                        UNDER Rs. ${maxPrice.toLocaleString()}
+                    </div>
+                    <div class="relative w-full h-36 sm:h-48 md:h-56 bg-slate-50 overflow-hidden cursor-pointer" onclick="openProductModal(${prod.id})">
+                        <img src="${prod.image}" alt="${prod.name}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300" />
+                    </div>
+                    <div class="p-2.5 sm:p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-extrabold text-xs sm:text-base text-gray-900 group-hover:text-red-500 transition-colors line-clamp-2" onclick="openProductModal(${prod.id})">
+                                ${prod.name}
+                            </h3>
+                            <div class="flex items-baseline gap-1.5 sm:gap-2 mt-1.5">
+                                <span class="text-sm sm:text-xl font-black text-red-600">Rs. ${prod.price.toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <button type="button" onclick="addToCart(${prod.id})" class="mt-2.5 w-full py-2 rounded-xl bg-slate-900 hover:bg-red-600 text-white text-xs font-black transition flex items-center justify-center gap-1.5 active:scale-95 shadow-xs">
+                            <i class="fas fa-shopping-basket text-xs"></i>
+                            <span>Add to Cart</span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+    const el = document.getElementById('products-section');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+window.filterUnderPrice = filterUnderPrice;
+
+function claimAllVouchers() {
+    const claimed = {
+        vouchers: ['MEHAR300', 'FREESHIP', 'WELCOME10'],
+        timestamp: Date.now()
+    };
+    localStorage.setItem('mehar_toys_claimed_vouchers', JSON.stringify(claimed));
+    
+    const btn = document.getElementById('btn-collect-vouchers');
+    if (btn) {
+        btn.textContent = '✓ All Collected!';
+        btn.classList.remove('from-red-600', 'to-rose-600');
+        btn.classList.add('bg-emerald-600');
+    }
+    showToast("🎉 Mubarak! All 3 luxury vouchers collected! Maximum discount will auto-apply at checkout!");
+}
+window.claimAllVouchers = claimAllVouchers;
+
+function initCountdownClocks() {
+    let totalSeconds = 4 * 3600 + 28 * 60 + 45;
+    
+    function tick() {
+        if (totalSeconds <= 0) totalSeconds = 6 * 3600;
+        totalSeconds--;
+        
+        const h = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+        const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+        const s = String(totalSeconds % 60).padStart(2, '0');
+
+        const elH1 = document.getElementById('countdown-hours');
+        const elM1 = document.getElementById('countdown-minutes');
+        const elS1 = document.getElementById('countdown-seconds');
+        if (elH1) elH1.textContent = h;
+        if (elM1) elM1.textContent = m;
+        if (elS1) elS1.textContent = s;
+
+        const elH2 = document.getElementById('flash-clock-h');
+        const elM2 = document.getElementById('flash-clock-m');
+        const elS2 = document.getElementById('flash-clock-s');
+        if (elH2) elH2.textContent = h;
+        if (elM2) elM2.textContent = m;
+        if (elS2) elS2.textContent = s;
+    }
+    
+    tick();
+    setInterval(tick, 1000);
+}
+
+function renderFlashShelf() {
+    const container = document.getElementById('flash-shelf-container');
+    if (!container) return;
+
+    const allProds = getProducts();
+    const flashProds = allProds.slice(0, 4);
+
+    container.innerHTML = flashProds.map(prod => {
+        const discountPct = prod.discount || Math.round(((prod.originalPrice - prod.price) / prod.originalPrice) * 100) || 25;
+        const soldCount = Math.floor(prod.id * 3 + 12);
+        const stockLeft = Math.max(3, 24 - soldCount);
+        const percentSold = Math.min(88, Math.round((soldCount / (soldCount + stockLeft)) * 100));
+
+        return `
+            <div class="bg-white rounded-2xl border border-slate-200/80 p-2.5 sm:p-3 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group relative overflow-hidden">
+                <div class="absolute top-2 left-2 z-10 bg-red-600 text-white font-black text-[10px] px-2 py-0.5 rounded-full shadow-xs flex items-center gap-1">
+                    <i class="fas fa-fire text-amber-300 text-[10px]"></i> -${discountPct}%
+                </div>
+
+                <div class="w-full h-32 sm:h-40 rounded-xl overflow-hidden bg-slate-50 cursor-pointer relative" onclick="openProductModal(${prod.id})">
+                    <img src="${prod.image}" alt="${prod.name}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300" />
+                </div>
+
+                <div class="pt-2 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h4 class="font-bold text-xs text-slate-900 line-clamp-1 group-hover:text-red-600 transition" onclick="openProductModal(${prod.id})">
+                            ${prod.name}
+                        </h4>
+                        <div class="flex items-baseline gap-1.5 mt-1">
+                            <span class="text-sm font-black text-red-600">Rs. ${prod.price.toLocaleString()}</span>
+                            <span class="text-[10px] text-slate-400 line-through">Rs. ${(prod.originalPrice || Math.round(prod.price * 1.3)).toLocaleString()}</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-2 space-y-1">
+                        <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-gradient-to-r from-amber-500 to-red-500 h-1.5 rounded-full" style="width: ${percentSold}%"></div>
+                        </div>
+                        <div class="text-[9px] font-bold text-slate-500 flex items-center justify-between">
+                            <span class="text-red-600 font-extrabold">🔥 ${soldCount} Sold</span>
+                            <span>Only ${stockLeft} Left!</span>
+                        </div>
+                    </div>
+
+                    <button type="button" onclick="addToCart(${prod.id})" class="mt-2.5 w-full py-1.5 rounded-xl bg-slate-900 hover:bg-red-600 text-white text-[11px] font-extrabold transition-colors flex items-center justify-center gap-1.5 active:scale-95 shadow-2xs">
+                        <i class="fas fa-shopping-basket text-[10px]"></i>
+                        <span>Add To Cart</span>
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
 
 // ----------------------------------------------------------------
 // TOP ANNOUNCEMENT BAR ROTATOR (LUXURY SLEEK TICKER)

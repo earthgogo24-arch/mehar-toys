@@ -1,0 +1,75 @@
+/* =========================================================
+   MEHAR TOYS - LUXURY MOBILE & DESKTOP STORE THEME (DARAZ-INSPIRED)
+   ========================================================= */
+
+/* 1. Complete Scrollbar Suppression across all browsers */
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar,
+.overflow-x-auto::-webkit-scrollbar,
+#categories-container::-webkit-scrollbar,
+#launchpad-container::-webkit-scrollbar,
+#flash-shelf-container::-webkit-scrollbar,
+nav::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    -webkit-appearance: none !important;
+    background: transparent !important;
+}
+
+.no-scrollbar,
+.scrollbar-none,
+.overflow-x-auto,
+#categories-container,
+#launchpad-container,
+#flash-shelf-container,
+nav {
+    -ms-overflow-style: none !important;  /* IE and Edge */
+    scrollbar-width: none !important;     /* Firefox */
+    -webkit-overflow-scrolling: touch !important; /* iOS smooth momentum scroll */
+}
+
+/* 2. Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 3. Luxury Gradients & Shimmer Effects */
+@keyframes goldShine {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.shimmer-gold {
+    background: linear-gradient(90deg, rgba(251, 191, 36, 0.1) 0%, rgba(251, 191, 36, 0.4) 50%, rgba(251, 191, 36, 0.1) 100%);
+    background-size: 200% 100%;
+    animation: goldShine 3s infinite linear;
+}
+
+/* Pulse Glow for Flash Sale */
+@keyframes redPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+}
+
+.pulse-flash {
+    animation: redPulse 2s infinite;
+}
+
+/* 4. Ticker Transition */
+#announcement-content {
+    transition: opacity 0.22s ease-in-out, transform 0.22s ease-in-out;
+}
+
+/* 5. Luxury Glassmorphism */
+.glass-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-dark {
+    background: rgba(15, 23, 42, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
