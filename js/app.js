@@ -87,30 +87,62 @@ function loadVouchersStripConfig() {
         const tagEl = document.getElementById('voucher-strip-tag');
         const subEl = document.getElementById('voucher-strip-subtitle');
 
+        const chip1Container = document.getElementById('voucher-chip-1-container');
         const chip1Title = document.getElementById('voucher-chip-1-title');
         const chip1Sub = document.getElementById('voucher-chip-1-sub');
 
+        const chip2Container = document.getElementById('voucher-chip-2-container');
         const chip2Title = document.getElementById('voucher-chip-2-title');
         const chip2Sub = document.getElementById('voucher-chip-2-sub');
 
+        const chip3Container = document.getElementById('voucher-chip-3-container');
         const chip3Title = document.getElementById('voucher-chip-3-title');
         const chip3Sub = document.getElementById('voucher-chip-3-sub');
+
+        const btnText = document.getElementById('btn-collect-vouchers-text');
 
         if (config.title && titleEl) titleEl.textContent = config.title;
         if (config.tag && tagEl) tagEl.textContent = config.tag;
         if (config.subtitle && subEl) subEl.textContent = config.subtitle;
 
+        let visibleCount = 0;
+
+        // Voucher 1 (Cash Discount)
         if (config.v1) {
-            if (config.v1.title && chip1Title) chip1Title.textContent = config.v1.title;
-            if (config.v1.sub && chip1Sub) chip1Sub.textContent = config.v1.sub;
+            const isV1Enabled = config.v1.enabled !== false;
+            if (chip1Container) chip1Container.classList.toggle('hidden', !isV1Enabled);
+            if (chip1Title && config.v1.title) chip1Title.textContent = config.v1.title;
+            if (chip1Sub && config.v1.sub) chip1Sub.textContent = config.v1.sub;
+            if (isV1Enabled) visibleCount++;
         }
+
+        // Voucher 2 (Free Shipping)
         if (config.v2) {
-            if (config.v2.title && chip2Title) chip2Title.textContent = config.v2.title;
-            if (config.v2.sub && chip2Sub) chip2Sub.textContent = config.v2.sub;
+            const isV2Enabled = config.v2.enabled !== false;
+            if (chip2Container) chip2Container.classList.toggle('hidden', !isV2Enabled);
+            if (chip2Title && config.v2.title) chip2Title.textContent = config.v2.title;
+            if (chip2Sub && config.v2.sub) chip2Sub.textContent = config.v2.sub;
+            if (isV2Enabled) visibleCount++;
         }
+
+        // Voucher 3 (Percentage Discount)
         if (config.v3) {
-            if (config.v3.title && chip3Title) chip3Title.textContent = config.v3.title;
-            if (config.v3.sub && chip3Sub) chip3Sub.textContent = config.v3.sub;
+            const isV3Enabled = config.v3.enabled !== false;
+            if (chip3Container) chip3Container.classList.toggle('hidden', !isV3Enabled);
+            if (chip3Title && config.v3.title) chip3Title.textContent = config.v3.title;
+            if (chip3Sub && config.v3.sub) chip3Sub.textContent = config.v3.sub;
+            if (isV3Enabled) visibleCount++;
+        }
+
+        // Collect button text
+        if (btnText) {
+            if (visibleCount === 1) {
+                btnText.textContent = 'Collect Voucher';
+            } else if (visibleCount === 0) {
+                btnText.textContent = 'No Vouchers';
+            } else {
+                btnText.textContent = 'Collect All';
+            }
         }
     } catch(err) {
         console.warn('Vouchers strip config load error:', err);
@@ -179,11 +211,15 @@ window.filterUnderPrice = filterUnderPrice;
 
 function claimAllVouchers() {
     const vConfig = (typeof getVouchersStripConfigApp === 'function') ? getVouchersStripConfigApp() : {};
-    const codes = [
-        (vConfig.v1 && vConfig.v1.code) || 'SAVE300',
-        (vConfig.v2 && vConfig.v2.code) || 'FREESHIP',
-        (vConfig.v3 && vConfig.v3.code) || 'WELCOME10'
-    ];
+    const codes = [];
+    if (vConfig.v1 && vConfig.v1.enabled !== false) codes.push(vConfig.v1.code || 'SAVE300');
+    if (vConfig.v2 && vConfig.v2.enabled !== false) codes.push(vConfig.v2.code || 'FREESHIP');
+    if (vConfig.v3 && vConfig.v3.enabled !== false) codes.push(vConfig.v3.code || 'WELCOME10');
+
+    if (codes.length === 0) {
+        codes.push('WELCOME10');
+    }
+
     const claimed = {
         vouchers: codes,
         timestamp: Date.now()
@@ -192,10 +228,11 @@ function claimAllVouchers() {
     
     const btn = document.getElementById('btn-collect-vouchers');
     if (btn) {
-        btn.innerHTML = '<i class="fas fa-check-circle"></i> <span>All Collected!</span>';
+        const label = codes.length === 1 ? 'Voucher Collected!' : 'All Collected!';
+        btn.innerHTML = `<i class="fas fa-check-circle"></i> <span>${label}</span>`;
         btn.className = 'px-5 py-2.5 rounded-2xl bg-emerald-600 text-white font-black text-xs shadow-lg shadow-emerald-600/30 transition-all shrink-0 flex items-center gap-1.5';
     }
-    showToast("🎉 Mubarak! All 3 luxury vouchers collected! Discount codes " + codes.join(', ') + " will auto-apply at checkout!");
+    showToast("🎉 Mubarak! Selected offer voucher (" + codes.join(', ') + ") collected! Discount will auto-apply at checkout!");
 }
 window.claimAllVouchers = claimAllVouchers;
 

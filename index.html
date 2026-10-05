@@ -498,26 +498,26 @@
                 <!-- Voucher Chips (Controlled from Admin Panel) -->
                 <div class="flex items-center gap-2.5 overflow-x-auto no-scrollbar scrollbar-none w-full md:w-auto py-1">
                     <!-- Chip 1: Cash Discount -->
-                    <div class="px-3.5 py-2 rounded-2xl border border-dashed border-red-400/80 bg-red-950/40 text-left shrink-0 backdrop-blur-sm shadow-xs">
+                    <div id="voucher-chip-1-container" class="px-3.5 py-2 rounded-2xl border border-dashed border-red-400/80 bg-red-950/40 text-left shrink-0 backdrop-blur-sm shadow-xs transition-all">
                         <div id="voucher-chip-1-title" class="text-xs font-black text-rose-400">Rs. 300 OFF</div>
                         <div id="voucher-chip-1-sub" class="text-[9px] text-slate-300 font-bold">On orders Rs. 3,500+</div>
                     </div>
 
                     <!-- Chip 2: Free Shipping -->
-                    <div class="px-3.5 py-2 rounded-2xl border border-dashed border-emerald-400/80 bg-emerald-950/40 text-left shrink-0 backdrop-blur-sm shadow-xs">
+                    <div id="voucher-chip-2-container" class="px-3.5 py-2 rounded-2xl border border-dashed border-emerald-400/80 bg-emerald-950/40 text-left shrink-0 backdrop-blur-sm shadow-xs transition-all">
                         <div id="voucher-chip-2-title" class="text-xs font-black text-emerald-400">FREE SHIPPING</div>
                         <div id="voucher-chip-2-sub" class="text-[9px] text-slate-300 font-bold">Nationwide Pakistan</div>
                     </div>
 
                     <!-- Chip 3: Percentage Discount -->
-                    <div class="px-3.5 py-2 rounded-2xl border border-dashed border-amber-400/80 bg-amber-950/40 text-left shrink-0 backdrop-blur-sm shadow-xs">
+                    <div id="voucher-chip-3-container" class="px-3.5 py-2 rounded-2xl border border-dashed border-amber-400/80 bg-amber-950/40 text-left shrink-0 backdrop-blur-sm shadow-xs transition-all">
                         <div id="voucher-chip-3-title" class="text-xs font-black text-amber-300">10% OFF</div>
                         <div id="voucher-chip-3-sub" class="text-[9px] text-slate-300 font-bold">Code: WELCOME10</div>
                     </div>
 
                     <button type="button" id="btn-collect-vouchers" onclick="claimAllVouchers()" class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black text-xs shadow-lg shadow-amber-400/20 transition-all shrink-0 active:scale-95 flex items-center gap-1.5">
                         <i class="fas fa-ticket text-slate-950"></i>
-                        <span>Collect All</span>
+                        <span id="btn-collect-vouchers-text">Collect All</span>
                     </button>
                 </div>
 

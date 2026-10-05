@@ -784,13 +784,13 @@ function renderDashboardCharts() {
                 datasets: [{
                     label: 'Sales Revenue (Rs.)',
                     data: salesData,
-                    borderColor: '#EF4444',
-                    backgroundColor: 'rgba(239, 68, 68, 0.08)',
+                    borderColor: '#F59E0B',
+                    backgroundColor: 'rgba(245, 158, 11, 0.12)',
                     borderWidth: 3,
                     fill: true,
                     tension: 0.4,
-                    pointBackgroundColor: '#EF4444',
-                    pointBorderColor: '#fff',
+                    pointBackgroundColor: '#FDE68A',
+                    pointBorderColor: '#B45309',
                     pointBorderWidth: 2,
                     pointRadius: 5,
                     pointHoverRadius: 7
@@ -802,6 +802,12 @@ function renderDashboardCharts() {
                 plugins: {
                     legend: { display: false },
                     tooltip: {
+                        backgroundColor: '#0F1424',
+                        titleColor: '#FDE68A',
+                        bodyColor: '#FFFFFF',
+                        borderColor: 'rgba(212, 175, 55, 0.3)',
+                        borderWidth: 1,
+                        padding: 10,
                         callbacks: {
                             label: (ctx) => ` Revenue: Rs. ${ctx.raw.toLocaleString()}`
                         }
@@ -810,13 +816,15 @@ function renderDashboardCharts() {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        grid: { color: 'rgba(0,0,0,0.04)' },
+                        grid: { color: 'rgba(255, 255, 255, 0.06)' },
                         ticks: {
+                            color: '#94A3B8',
                             callback: (val) => `Rs. ${val.toLocaleString()}`
                         }
                     },
                     x: {
-                        grid: { display: false }
+                        grid: { display: false },
+                        ticks: { color: '#94A3B8' }
                     }
                 }
             }
@@ -838,9 +846,9 @@ function renderDashboardCharts() {
                 labels: ['Pending', 'Dispatched', 'Delivered', 'Cancelled'],
                 datasets: [{
                     data: orders.length === 0 ? [1, 0, 0, 0] : [pending, dispatched, delivered, cancelled],
-                    backgroundColor: ['#F59E0B', '#3B82F6', '#10B981', '#EF4444'],
+                    backgroundColor: ['#F59E0B', '#38BDF8', '#10B981', '#F43F5E'],
                     borderWidth: 3,
-                    borderColor: '#FFFFFF'
+                    borderColor: '#0F1424'
                 }]
             },
             options: {
@@ -848,7 +856,14 @@ function renderDashboardCharts() {
                 maintainAspectRatio: false,
                 cutout: '72%',
                 plugins: {
-                    legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11, weight: 'bold' } } }
+                    legend: { 
+                        position: 'bottom', 
+                        labels: { 
+                            boxWidth: 12, 
+                            color: '#CBD5E1',
+                            font: { size: 11, weight: 'bold' } 
+                        } 
+                    }
                 }
             }
         });
@@ -883,14 +898,14 @@ function setAnalyticsPeriod(period) {
     document.querySelectorAll('.analytics-pill').forEach(btn => {
         const p = btn.getAttribute('data-period');
         if (p === period) {
-            btn.className = 'analytics-pill px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-slate-900 text-white shadow-xs';
+            btn.className = 'analytics-pill px-3.5 py-1.5 rounded-xl text-xs font-black transition bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 shadow-md border border-amber-300';
             if (p === 'today') {
-                btn.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span> Daily Live (Today)`;
+                btn.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-slate-950 animate-pulse"></span> Daily Live (Today)`;
             }
         } else {
-            btn.className = 'analytics-pill px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-transparent hover:bg-slate-100 text-slate-600';
+            btn.className = 'analytics-pill px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-[#0D1222] hover:bg-[#131930] text-slate-400 hover:text-white border border-amber-400/20';
             if (p === 'today') {
-                btn.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span> Daily Live (Today)`;
+                btn.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span> Daily Live (Today)`;
             }
         }
     });
@@ -1202,10 +1217,10 @@ function renderAnalyticsSalesChart(periodOrders, period, config) {
     let gradient = null;
     try {
         gradient = ctx.createLinearGradient(0, 0, 0, 240);
-        gradient.addColorStop(0, 'rgba(37, 99, 235, 0.18)');
-        gradient.addColorStop(1, 'rgba(37, 99, 235, 0.01)');
+        gradient.addColorStop(0, 'rgba(245, 158, 11, 0.22)');
+        gradient.addColorStop(1, 'rgba(245, 158, 11, 0.01)');
     } catch(e) {
-        gradient = 'rgba(37, 99, 235, 0.08)';
+        gradient = 'rgba(245, 158, 11, 0.1)';
     }
 
     analyticsSalesChartInstance = new Chart(canvas, {
@@ -1217,11 +1232,11 @@ function renderAnalyticsSalesChart(periodOrders, period, config) {
                 data: data,
                 fill: true,
                 backgroundColor: gradient,
-                borderColor: '#2563EB',
+                borderColor: '#F59E0B',
                 borderWidth: 2.5,
                 tension: 0.35,
-                pointBackgroundColor: '#2563EB',
-                pointBorderColor: '#FFFFFF',
+                pointBackgroundColor: '#FDE68A',
+                pointBorderColor: '#B45309',
                 pointBorderWidth: 2,
                 pointRadius: 4,
                 pointHoverRadius: 6
@@ -1233,7 +1248,11 @@ function renderAnalyticsSalesChart(periodOrders, period, config) {
             plugins: {
                 legend: { display: false },
                 tooltip: {
-                    backgroundColor: '#0F172A',
+                    backgroundColor: '#0F1424',
+                    titleColor: '#FDE68A',
+                    bodyColor: '#FFFFFF',
+                    borderColor: 'rgba(212, 175, 55, 0.3)',
+                    borderWidth: 1,
                     titleFont: { size: 12, weight: 'bold' },
                     bodyFont: { size: 12 },
                     padding: 10,
@@ -1248,7 +1267,7 @@ function renderAnalyticsSalesChart(periodOrders, period, config) {
             scales: {
                 y: {
                     beginAtZero: true,
-                    grid: { color: '#F1F5F9', borderDash: [4, 4] },
+                    grid: { color: 'rgba(255, 255, 255, 0.06)', borderDash: [4, 4] },
                     ticks: {
                         font: { size: 11 },
                         color: '#94A3B8',
@@ -4151,52 +4170,71 @@ window.resetHeroBannerDefaults = resetHeroBannerDefaults;
 // MODULE 15: VOUCHERS BANNER & PROMO STRIP CONTROLLER
 // ================================================================
 
+let currentVoucherPreset = 'default';
+let currentVoucherDisplayMode = 'all';
+
 const DEFAULT_VOUCHERS_STRIP_CONFIG = {
+    activePreset: "default",
+    displayMode: "all",
     title: "Claim Vouchers to Save More!",
     tag: "LIMITED",
     subtitle: "Click to collect discount vouchers for immediate checkout",
     v1: {
         title: "Rs. 300 OFF",
         sub: "On orders Rs. 3,500+",
-        code: "SAVE300"
+        code: "SAVE300",
+        enabled: true
     },
     v2: {
         title: "FREE SHIPPING",
         sub: "Nationwide Pakistan",
-        code: "FREESHIP"
+        code: "FREESHIP",
+        enabled: true
     },
     v3: {
         title: "10% OFF",
         sub: "Code: WELCOME10",
-        code: "WELCOME10"
+        code: "WELCOME10",
+        enabled: true
     }
 };
 
 const VOUCHER_PRESETS = {
-    default: DEFAULT_VOUCHERS_STRIP_CONFIG,
+    default: {
+        name: "Standard Store Vouchers",
+        title: "Claim Vouchers to Save More!",
+        tag: "LIMITED",
+        subtitle: "Click to collect discount vouchers for immediate checkout",
+        v1: { title: "Rs. 300 OFF", sub: "On orders Rs. 3,500+", code: "SAVE300", enabled: true },
+        v2: { title: "FREE SHIPPING", sub: "Nationwide Pakistan", code: "FREESHIP", enabled: true },
+        v3: { title: "10% OFF", sub: "Code: WELCOME10", code: "WELCOME10", enabled: true }
+    },
     eid: {
+        name: "🌙 Eid Mubarak Gala",
         title: "🌙 Eid Mubarak Special Vouchers!",
         tag: "EID GALA",
         subtitle: "Collect Eid gift vouchers & celebrate with biggest toy savings",
-        v1: { title: "Rs. 500 OFF", sub: "On orders Rs. 4,000+", code: "EID500" },
-        v2: { title: "FREE SHIPPING", sub: "All Pakistan Delivery", code: "FREESHIP" },
-        v3: { title: "15% OFF", sub: "Code: EIDMUBARAK", code: "EIDMUBARAK" }
+        v1: { title: "Rs. 500 OFF", sub: "On orders Rs. 4,000+", code: "EID500", enabled: true },
+        v2: { title: "FREE SHIPPING", sub: "All Pakistan Delivery", code: "FREESHIP", enabled: true },
+        v3: { title: "15% OFF", sub: "Code: EIDMUBARAK", code: "EIDMUBARAK", enabled: true }
     },
     weekend: {
+        name: "⚡ Weekend Flash Sale",
         title: "⚡ Super Weekend Flash Deals!",
         tag: "WEEKEND ONLY",
         subtitle: "Special limited-time vouchers for weekend toy shoppers",
-        v1: { title: "Rs. 400 OFF", sub: "On orders Rs. 3,000+", code: "WEEKEND400" },
-        v2: { title: "FREE SHIPPING", sub: "Express 24-48h Dispatch", code: "FREESHIP" },
-        v3: { title: "20% OFF", sub: "Code: FLASH20", code: "FLASH20" }
+        v1: { title: "Rs. 400 OFF", sub: "On orders Rs. 3,000+", code: "WEEKEND400", enabled: true },
+        v2: { title: "FREE SHIPPING", sub: "Express 24-48h Dispatch", code: "FREESHIP", enabled: true },
+        v3: { title: "20% OFF", sub: "Code: FLASH20", code: "FLASH20", enabled: true }
     },
     mega: {
+        name: "🎉 Grand Toy Mela",
         title: "🎉 Grand Toy Festival Vouchers!",
         tag: "MEGA SALE",
         subtitle: "Collect all vouchers for instant savings at checkout",
-        v1: { title: "Rs. 600 OFF", sub: "On orders Rs. 5,000+", code: "MEGA600" },
-        v2: { title: "FREE SHIPPING", sub: "Doorstep Delivery Free", code: "FREESHIP" },
-        v3: { title: "25% OFF", sub: "Code: TOYFEST25", code: "TOYFEST25" }
+        v1: { title: "Rs. 600 OFF", sub: "On orders Rs. 5,000+", code: "MEGA600", enabled: true },
+        v2: { title: "FREE SHIPPING", sub: "Doorstep Delivery Free", code: "FREESHIP", enabled: true },
+        v3: { title: "25% OFF", sub: "Code: TOYFEST25", code: "TOYFEST25", enabled: true }
     }
 };
 
@@ -4212,6 +4250,8 @@ function getVouchersStripConfig() {
 
 function renderVouchersStripTab() {
     const config = getVouchersStripConfig();
+    currentVoucherPreset = config.activePreset || 'default';
+    currentVoucherDisplayMode = config.displayMode || 'all';
 
     const titleInput = document.getElementById('vstrip-input-title');
     const tagInput = document.getElementById('vstrip-input-tag');
@@ -4220,14 +4260,17 @@ function renderVouchersStripTab() {
     const v1Title = document.getElementById('vstrip-input-v1-title');
     const v1Sub = document.getElementById('vstrip-input-v1-sub');
     const v1Code = document.getElementById('vstrip-input-v1-code');
+    const v1Enabled = document.getElementById('vstrip-input-v1-enabled');
 
     const v2Title = document.getElementById('vstrip-input-v2-title');
     const v2Sub = document.getElementById('vstrip-input-v2-sub');
     const v2Code = document.getElementById('vstrip-input-v2-code');
+    const v2Enabled = document.getElementById('vstrip-input-v2-enabled');
 
     const v3Title = document.getElementById('vstrip-input-v3-title');
     const v3Sub = document.getElementById('vstrip-input-v3-sub');
     const v3Code = document.getElementById('vstrip-input-v3-code');
+    const v3Enabled = document.getElementById('vstrip-input-v3-enabled');
 
     if (titleInput) titleInput.value = config.title || '';
     if (tagInput) tagInput.value = config.tag || '';
@@ -4236,64 +4279,69 @@ function renderVouchersStripTab() {
     if (v1Title) v1Title.value = (config.v1 && config.v1.title) || '';
     if (v1Sub) v1Sub.value = (config.v1 && config.v1.sub) || '';
     if (v1Code) v1Code.value = (config.v1 && config.v1.code) || '';
+    if (v1Enabled) v1Enabled.checked = config.v1 ? (config.v1.enabled !== false) : true;
 
     if (v2Title) v2Title.value = (config.v2 && config.v2.title) || '';
     if (v2Sub) v2Sub.value = (config.v2 && config.v2.sub) || '';
     if (v2Code) v2Code.value = (config.v2 && config.v2.code) || '';
+    if (v2Enabled) v2Enabled.checked = config.v2 ? (config.v2.enabled !== false) : true;
 
     if (v3Title) v3Title.value = (config.v3 && config.v3.title) || '';
     if (v3Sub) v3Sub.value = (config.v3 && config.v3.sub) || '';
     if (v3Code) v3Code.value = (config.v3 && config.v3.code) || '';
+    if (v3Enabled) v3Enabled.checked = config.v3 ? (config.v3.enabled !== false) : true;
 
+    // Set Radio for display mode
+    const radio = document.querySelector(`input[name="vstrip-display-mode"][value="${currentVoucherDisplayMode}"]`);
+    if (radio) radio.checked = true;
+
+    highlightSelectedPresetCard(currentVoucherPreset);
+    updateIndividualVoucherBadges();
     updateVouchersStripAdminPreview();
 }
 
-function updateVouchersStripAdminPreview() {
-    const titleInput = document.getElementById('vstrip-input-title');
-    const tagInput = document.getElementById('vstrip-input-tag');
-    const subtitleInput = document.getElementById('vstrip-input-subtitle');
+function highlightSelectedPresetCard(presetKey) {
+    const presetKeys = ['default', 'eid', 'weekend', 'mega'];
+    const presetNames = {
+        default: 'Standard Store Vouchers',
+        eid: '🌙 Eid Mubarak Gala',
+        weekend: '⚡ Weekend Flash Sale',
+        mega: '🎉 Grand Toy Mela'
+    };
 
-    const v1Title = document.getElementById('vstrip-input-v1-title');
-    const v1Sub = document.getElementById('vstrip-input-v1-sub');
+    presetKeys.forEach(k => {
+        const card = document.getElementById(`card-preset-${k}`);
+        const tag = document.getElementById(`tag-preset-${k}`);
+        if (!card) return;
 
-    const v2Title = document.getElementById('vstrip-input-v2-title');
-    const v2Sub = document.getElementById('vstrip-input-v2-sub');
+        if (k === presetKey) {
+            card.className = "campaign-preset-card p-4 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-between bg-white border-emerald-500 ring-2 ring-emerald-500/20 shadow-sm";
+            if (tag) tag.classList.remove('hidden');
+            const footer = card.querySelector('div:last-child');
+            if (footer) {
+                footer.className = "mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-600";
+                footer.innerHTML = '<span>Selected Offer</span><i class="fas fa-check-circle text-emerald-600"></i>';
+            }
+        } else {
+            card.className = "campaign-preset-card p-4 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-between bg-white border-slate-200 hover:border-amber-400";
+            if (tag) tag.classList.add('hidden');
+            const footer = card.querySelector('div:last-child');
+            if (footer) {
+                footer.className = "mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-slate-500";
+                footer.innerHTML = '<span>Click to Activate</span><i class="far fa-circle text-slate-300"></i>';
+            }
+        }
+    });
 
-    const v3Title = document.getElementById('vstrip-input-v3-title');
-    const v3Sub = document.getElementById('vstrip-input-v3-sub');
+    const activeBadge = document.getElementById('active-campaign-name-badge');
+    if (activeBadge) activeBadge.textContent = presetNames[presetKey] || 'Custom Offer';
 
-    const previewTitle = document.getElementById('preview-vstrip-title');
-    const previewTag = document.getElementById('preview-vstrip-tag');
-    const previewSubtitle = document.getElementById('preview-vstrip-subtitle');
-
-    const pChip1Title = document.getElementById('preview-chip-1-title');
-    const pChip1Sub = document.getElementById('preview-chip-1-sub');
-
-    const pChip2Title = document.getElementById('preview-chip-2-title');
-    const pChip2Sub = document.getElementById('preview-chip-2-sub');
-
-    const pChip3Title = document.getElementById('preview-chip-3-title');
-    const pChip3Sub = document.getElementById('preview-chip-3-sub');
-
-    if (previewTitle && titleInput) previewTitle.textContent = titleInput.value || DEFAULT_VOUCHERS_STRIP_CONFIG.title;
-    if (previewTag && tagInput) previewTag.textContent = tagInput.value || DEFAULT_VOUCHERS_STRIP_CONFIG.tag;
-    if (previewSubtitle && subtitleInput) previewSubtitle.textContent = subtitleInput.value || DEFAULT_VOUCHERS_STRIP_CONFIG.subtitle;
-
-    if (pChip1Title && v1Title) pChip1Title.textContent = v1Title.value || DEFAULT_VOUCHERS_STRIP_CONFIG.v1.title;
-    if (pChip1Sub && v1Sub) pChip1Sub.textContent = v1Sub.value || DEFAULT_VOUCHERS_STRIP_CONFIG.v1.sub;
-
-    if (pChip2Title && v2Title) pChip2Title.textContent = v2Title.value || DEFAULT_VOUCHERS_STRIP_CONFIG.v2.title;
-    if (pChip2Sub && v2Sub) pChip2Sub.textContent = v2Sub.value || DEFAULT_VOUCHERS_STRIP_CONFIG.v2.sub;
-
-    if (pChip3Title && v3Title) pChip3Title.textContent = v3Title.value || DEFAULT_VOUCHERS_STRIP_CONFIG.v3.title;
-    if (pChip3Sub && v3Sub) pChip3Sub.textContent = v3Sub.value || DEFAULT_VOUCHERS_STRIP_CONFIG.v3.sub;
-}
-
-function handleVouchersStripInputChange() {
-    updateVouchersStripAdminPreview();
+    const previewOfferTag = document.getElementById('preview-active-offer-name');
+    if (previewOfferTag) previewOfferTag.textContent = `✓ Live Active: ${presetNames[presetKey] || 'Custom Offer'}`;
 }
 
 function selectVouchersPreset(presetKey) {
+    currentVoucherPreset = presetKey;
     const preset = VOUCHER_PRESETS[presetKey] || DEFAULT_VOUCHERS_STRIP_CONFIG;
 
     const titleInput = document.getElementById('vstrip-input-title');
@@ -4328,6 +4376,164 @@ function selectVouchersPreset(presetKey) {
     if (v3Sub) v3Sub.value = preset.v3.sub;
     if (v3Code) v3Code.value = preset.v3.code;
 
+    highlightSelectedPresetCard(presetKey);
+    updateVouchersStripAdminPreview();
+}
+
+function handleDisplayModeChange(mode) {
+    currentVoucherDisplayMode = mode;
+    const v1Enabled = document.getElementById('vstrip-input-v1-enabled');
+    const v2Enabled = document.getElementById('vstrip-input-v2-enabled');
+    const v3Enabled = document.getElementById('vstrip-input-v3-enabled');
+
+    if (mode === 'all') {
+        if (v1Enabled) v1Enabled.checked = true;
+        if (v2Enabled) v2Enabled.checked = true;
+        if (v3Enabled) v3Enabled.checked = true;
+    } else if (mode === 'v1') {
+        if (v1Enabled) v1Enabled.checked = true;
+        if (v2Enabled) v2Enabled.checked = false;
+        if (v3Enabled) v3Enabled.checked = false;
+    } else if (mode === 'v2') {
+        if (v1Enabled) v1Enabled.checked = false;
+        if (v2Enabled) v2Enabled.checked = true;
+        if (v3Enabled) v3Enabled.checked = false;
+    } else if (mode === 'v3') {
+        if (v1Enabled) v1Enabled.checked = false;
+        if (v2Enabled) v2Enabled.checked = false;
+        if (v3Enabled) v3Enabled.checked = true;
+    }
+
+    updateIndividualVoucherBadges();
+    updateVouchersStripAdminPreview();
+}
+
+function handleIndividualVoucherToggle(vKey) {
+    updateIndividualVoucherBadges();
+    updateVouchersStripAdminPreview();
+}
+
+function updateIndividualVoucherBadges() {
+    const v1Enabled = document.getElementById('vstrip-input-v1-enabled');
+    const v2Enabled = document.getElementById('vstrip-input-v2-enabled');
+    const v3Enabled = document.getElementById('vstrip-input-v3-enabled');
+
+    const v1Badge = document.getElementById('v1-status-badge');
+    const v2Badge = document.getElementById('v2-status-badge');
+    const v3Badge = document.getElementById('v3-status-badge');
+
+    const card1 = document.getElementById('vstrip-card-v1');
+    const card2 = document.getElementById('vstrip-card-v2');
+    const card3 = document.getElementById('vstrip-card-v3');
+
+    if (v1Badge && v1Enabled) {
+        if (v1Enabled.checked) {
+            v1Badge.className = "text-[9px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700";
+            v1Badge.textContent = "🟢 SHOWING ON STORE";
+            if (card1) card1.classList.remove('opacity-40');
+        } else {
+            v1Badge.className = "text-[9px] font-black px-2 py-0.5 rounded-full bg-slate-200 text-slate-500";
+            v1Badge.textContent = "⚪ HIDDEN FROM STORE";
+            if (card1) card1.classList.add('opacity-40');
+        }
+    }
+
+    if (v2Badge && v2Enabled) {
+        if (v2Enabled.checked) {
+            v2Badge.className = "text-[9px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700";
+            v2Badge.textContent = "🟢 SHOWING ON STORE";
+            if (card2) card2.classList.remove('opacity-40');
+        } else {
+            v2Badge.className = "text-[9px] font-black px-2 py-0.5 rounded-full bg-slate-200 text-slate-500";
+            v2Badge.textContent = "⚪ HIDDEN FROM STORE";
+            if (card2) card2.classList.add('opacity-40');
+        }
+    }
+
+    if (v3Badge && v3Enabled) {
+        if (v3Enabled.checked) {
+            v3Badge.className = "text-[9px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700";
+            v3Badge.textContent = "🟢 SHOWING ON STORE";
+            if (card3) card3.classList.remove('opacity-40');
+        } else {
+            v3Badge.className = "text-[9px] font-black px-2 py-0.5 rounded-full bg-slate-200 text-slate-500";
+            v3Badge.textContent = "⚪ HIDDEN FROM STORE";
+            if (card3) card3.classList.add('opacity-40');
+        }
+    }
+}
+
+function updateVouchersStripAdminPreview() {
+    const titleInput = document.getElementById('vstrip-input-title');
+    const tagInput = document.getElementById('vstrip-input-tag');
+    const subtitleInput = document.getElementById('vstrip-input-subtitle');
+
+    const v1Title = document.getElementById('vstrip-input-v1-title');
+    const v1Sub = document.getElementById('vstrip-input-v1-sub');
+    const v1Enabled = document.getElementById('vstrip-input-v1-enabled');
+
+    const v2Title = document.getElementById('vstrip-input-v2-title');
+    const v2Sub = document.getElementById('vstrip-input-v2-sub');
+    const v2Enabled = document.getElementById('vstrip-input-v2-enabled');
+
+    const v3Title = document.getElementById('vstrip-input-v3-title');
+    const v3Sub = document.getElementById('vstrip-input-v3-sub');
+    const v3Enabled = document.getElementById('vstrip-input-v3-enabled');
+
+    const previewTitle = document.getElementById('preview-vstrip-title');
+    const previewTag = document.getElementById('preview-vstrip-tag');
+    const previewSubtitle = document.getElementById('preview-vstrip-subtitle');
+
+    const pChip1Container = document.getElementById('preview-chip-1-container');
+    const pChip1Title = document.getElementById('preview-chip-1-title');
+    const pChip1Sub = document.getElementById('preview-chip-1-sub');
+
+    const pChip2Container = document.getElementById('preview-chip-2-container');
+    const pChip2Title = document.getElementById('preview-chip-2-title');
+    const pChip2Sub = document.getElementById('preview-chip-2-sub');
+
+    const pChip3Container = document.getElementById('preview-chip-3-container');
+    const pChip3Title = document.getElementById('preview-chip-3-title');
+    const pChip3Sub = document.getElementById('preview-chip-3-sub');
+
+    const previewBtnText = document.getElementById('preview-btn-collect-text');
+
+    if (previewTitle && titleInput) previewTitle.textContent = titleInput.value || DEFAULT_VOUCHERS_STRIP_CONFIG.title;
+    if (previewTag && tagInput) previewTag.textContent = tagInput.value || DEFAULT_VOUCHERS_STRIP_CONFIG.tag;
+    if (previewSubtitle && subtitleInput) previewSubtitle.textContent = subtitleInput.value || DEFAULT_VOUCHERS_STRIP_CONFIG.subtitle;
+
+    // Chip 1
+    const isV1On = v1Enabled ? v1Enabled.checked : true;
+    if (pChip1Container) pChip1Container.classList.toggle('hidden', !isV1On);
+    if (pChip1Title && v1Title) pChip1Title.textContent = v1Title.value || DEFAULT_VOUCHERS_STRIP_CONFIG.v1.title;
+    if (pChip1Sub && v1Sub) pChip1Sub.textContent = v1Sub.value || DEFAULT_VOUCHERS_STRIP_CONFIG.v1.sub;
+
+    // Chip 2
+    const isV2On = v2Enabled ? v2Enabled.checked : true;
+    if (pChip2Container) pChip2Container.classList.toggle('hidden', !isV2On);
+    if (pChip2Title && v2Title) pChip2Title.textContent = v2Title.value || DEFAULT_VOUCHERS_STRIP_CONFIG.v2.title;
+    if (pChip2Sub && v2Sub) pChip2Sub.textContent = v2Sub.value || DEFAULT_VOUCHERS_STRIP_CONFIG.v2.sub;
+
+    // Chip 3
+    const isV3On = v3Enabled ? v3Enabled.checked : true;
+    if (pChip3Container) pChip3Container.classList.toggle('hidden', !isV3On);
+    if (pChip3Title && v3Title) pChip3Title.textContent = v3Title.value || DEFAULT_VOUCHERS_STRIP_CONFIG.v3.title;
+    if (pChip3Sub && v3Sub) pChip3Sub.textContent = v3Sub.value || DEFAULT_VOUCHERS_STRIP_CONFIG.v3.sub;
+
+    // Collect Button Text in preview
+    const enabledCount = (isV1On ? 1 : 0) + (isV2On ? 1 : 0) + (isV3On ? 1 : 0);
+    if (previewBtnText) {
+        if (enabledCount === 1) {
+            previewBtnText.textContent = 'Collect Voucher';
+        } else if (enabledCount === 0) {
+            previewBtnText.textContent = 'No Vouchers';
+        } else {
+            previewBtnText.textContent = 'Collect All';
+        }
+    }
+}
+
+function handleVouchersStripInputChange() {
     updateVouchersStripAdminPreview();
 }
 
@@ -4339,33 +4545,41 @@ function saveVouchersStripSettings() {
     const v1Title = document.getElementById('vstrip-input-v1-title');
     const v1Sub = document.getElementById('vstrip-input-v1-sub');
     const v1Code = document.getElementById('vstrip-input-v1-code');
+    const v1Enabled = document.getElementById('vstrip-input-v1-enabled');
 
     const v2Title = document.getElementById('vstrip-input-v2-title');
     const v2Sub = document.getElementById('vstrip-input-v2-sub');
     const v2Code = document.getElementById('vstrip-input-v2-code');
+    const v2Enabled = document.getElementById('vstrip-input-v2-enabled');
 
     const v3Title = document.getElementById('vstrip-input-v3-title');
     const v3Sub = document.getElementById('vstrip-input-v3-sub');
     const v3Code = document.getElementById('vstrip-input-v3-code');
+    const v3Enabled = document.getElementById('vstrip-input-v3-enabled');
 
     const config = {
+        activePreset: currentVoucherPreset,
+        displayMode: currentVoucherDisplayMode,
         title: (titleInput && titleInput.value) ? titleInput.value : DEFAULT_VOUCHERS_STRIP_CONFIG.title,
         tag: (tagInput && tagInput.value) ? tagInput.value : DEFAULT_VOUCHERS_STRIP_CONFIG.tag,
         subtitle: (subtitleInput && subtitleInput.value) ? subtitleInput.value : DEFAULT_VOUCHERS_STRIP_CONFIG.subtitle,
         v1: {
             title: (v1Title && v1Title.value) ? v1Title.value : DEFAULT_VOUCHERS_STRIP_CONFIG.v1.title,
             sub: (v1Sub && v1Sub.value) ? v1Sub.value : DEFAULT_VOUCHERS_STRIP_CONFIG.v1.sub,
-            code: (v1Code && v1Code.value) ? v1Code.value.toUpperCase() : DEFAULT_VOUCHERS_STRIP_CONFIG.v1.code
+            code: (v1Code && v1Code.value) ? v1Code.value.toUpperCase() : DEFAULT_VOUCHERS_STRIP_CONFIG.v1.code,
+            enabled: v1Enabled ? v1Enabled.checked : true
         },
         v2: {
             title: (v2Title && v2Title.value) ? v2Title.value : DEFAULT_VOUCHERS_STRIP_CONFIG.v2.title,
             sub: (v2Sub && v2Sub.value) ? v2Sub.value : DEFAULT_VOUCHERS_STRIP_CONFIG.v2.sub,
-            code: (v2Code && v2Code.value) ? v2Code.value.toUpperCase() : DEFAULT_VOUCHERS_STRIP_CONFIG.v2.code
+            code: (v2Code && v2Code.value) ? v2Code.value.toUpperCase() : DEFAULT_VOUCHERS_STRIP_CONFIG.v2.code,
+            enabled: v2Enabled ? v2Enabled.checked : true
         },
         v3: {
             title: (v3Title && v3Title.value) ? v3Title.value : DEFAULT_VOUCHERS_STRIP_CONFIG.v3.title,
             sub: (v3Sub && v3Sub.value) ? v3Sub.value : DEFAULT_VOUCHERS_STRIP_CONFIG.v3.sub,
-            code: (v3Code && v3Code.value) ? v3Code.value.toUpperCase() : DEFAULT_VOUCHERS_STRIP_CONFIG.v3.code
+            code: (v3Code && v3Code.value) ? v3Code.value.toUpperCase() : DEFAULT_VOUCHERS_STRIP_CONFIG.v3.code,
+            enabled: v3Enabled ? v3Enabled.checked : true
         },
         updatedAt: new Date().toISOString()
     };
@@ -4376,7 +4590,8 @@ function saveVouchersStripSettings() {
         window.dispatchEvent(new Event('storage'));
     } catch(e) {}
 
-    alert("✅ Zabardast! Homepage Vouchers Banner kamyabi se save ho gaya hai. Website par live change ho chuki hai!");
+    const selectedName = (VOUCHER_PRESETS[currentVoucherPreset] && VOUCHER_PRESETS[currentVoucherPreset].name) || 'Selected Offer';
+    alert(`✅ Kamyabi! Aapki select ki hui offer "${selectedName}" live publish ho gayi hai.\n\nJo offer aap ne select ki hai sirf wahi website par show ho gi aur baqi hide rahen gi!`);
 }
 
 function resetVouchersStripDefaults() {
@@ -4393,5 +4608,7 @@ window.renderVouchersStripTab = renderVouchersStripTab;
 window.updateVouchersStripAdminPreview = updateVouchersStripAdminPreview;
 window.handleVouchersStripInputChange = handleVouchersStripInputChange;
 window.selectVouchersPreset = selectVouchersPreset;
+window.handleDisplayModeChange = handleDisplayModeChange;
+window.handleIndividualVoucherToggle = handleIndividualVoucherToggle;
 window.saveVouchersStripSettings = saveVouchersStripSettings;
 window.resetVouchersStripDefaults = resetVouchersStripDefaults;
