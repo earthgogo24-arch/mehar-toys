@@ -116,16 +116,16 @@ function renderProducts() {
     if (emptyState) emptyState.classList.add('hidden');
 
     container.innerHTML = filtered.map(prod => `
-        <div class="toy-card bg-white rounded-3xl overflow-hidden shadow-md flex flex-col justify-between relative group border border-gray-100">
+        <div class="toy-card bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-md hover:shadow-xl flex flex-col justify-between relative group border border-gray-100 transition-all duration-300">
             <!-- Badges -->
-            <div class="absolute top-3 left-3 z-10 flex flex-col gap-1 pointer-events-none">
+            <div class="absolute top-2 left-2 sm:top-3 sm:left-3 z-10 flex flex-col gap-1 pointer-events-none">
                 ${prod.badge ? `
-                    <span class="badge-discount text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                    <span class="badge-discount text-[10px] sm:text-xs font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-sm">
                         ${prod.badge}
                     </span>
                 ` : ''}
                 ${prod.discount ? `
-                    <span class="bg-amber-400 text-gray-900 text-xs font-bold px-2.5 py-0.5 rounded-full shadow-sm">
+                    <span class="bg-amber-400 text-gray-900 text-[10px] sm:text-xs font-bold px-2 sm:px-2.5 py-0.5 rounded-full shadow-sm">
                         -${prod.discount}%
                     </span>
                 ` : ''}
@@ -135,13 +135,13 @@ function renderProducts() {
             <button 
                 type="button"
                 onclick="toggleWishlist(${prod.id}, event)" 
-                class="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md shadow-md flex items-center justify-center text-slate-400 hover:text-red-500 hover:scale-110 active:scale-90 transition-all cursor-pointer"
+                class="absolute top-2 right-2 sm:top-3 sm:right-3 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/90 backdrop-blur-md shadow-md flex items-center justify-center text-slate-400 hover:text-red-500 hover:scale-110 active:scale-90 transition-all cursor-pointer"
                 title="${isItemWishlisted(prod.id) ? 'Remove from Wishlist' : 'Save to Wishlist'}">
-                <i class="${isItemWishlisted(prod.id) ? 'fas fa-heart text-red-500' : 'far fa-heart'} text-xs"></i>
+                <i class="${isItemWishlisted(prod.id) ? 'fas fa-heart text-red-500' : 'far fa-heart'} text-[11px] sm:text-xs"></i>
             </button>
 
-            <!-- Product Image -->
-            <div class="relative overflow-hidden cursor-pointer bg-amber-50 h-56 flex items-center justify-center" onclick="openProductModal(${prod.id})">
+            <!-- Product Image (Responsive Height for mobile & tablet) -->
+            <div class="relative overflow-hidden cursor-pointer bg-amber-50 h-36 sm:h-48 md:h-56 flex items-center justify-center" onclick="openProductModal(${prod.id})">
                 <img 
                     src="${prod.image}" 
                     alt="${prod.name}" 
@@ -150,56 +150,56 @@ function renderProducts() {
                     onerror="this.src='https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=800&q=80'"
                 />
                 ${prod.videoUrl ? `
-                    <span class="absolute bottom-2.5 left-2.5 bg-red-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-md z-10">
-                        <i class="fab fa-youtube"></i> Video Demo
+                    <span class="absolute bottom-2 left-2 bg-red-600 text-white text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-full flex items-center gap-1 shadow-md z-10">
+                        <i class="fab fa-youtube"></i> Video
                     </span>
                 ` : ''}
                 <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-25 transition-all flex items-center justify-center">
                     <span class="opacity-0 group-hover:opacity-100 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-black px-3.5 py-1.5 rounded-full shadow-lg transition-all transform scale-95 group-hover:scale-100 flex items-center gap-1.5">
-                        <i class="fas fa-play text-red-600"></i> View Details & Video
+                        <i class="fas fa-play text-red-600"></i> View Details
                     </span>
                 </div>
             </div>
 
             <!-- Product Details -->
-            <div class="p-5 flex-1 flex flex-col justify-between">
+            <div class="p-2.5 sm:p-5 flex-1 flex flex-col justify-between">
                 <div>
-                    <div class="flex items-center gap-1.5 text-amber-400 text-xs mb-2">
-                        <i class="fas fa-star"></i>
+                    <div class="flex items-center gap-1 text-amber-400 text-[10px] sm:text-xs mb-1 sm:mb-2">
+                        <i class="fas fa-star text-[10px] sm:text-xs"></i>
                         <span class="font-bold text-gray-700">${prod.rating || 4.8}</span>
-                        <span class="text-gray-400">(${prod.reviewsCount || 25})</span>
-                        <span class="ml-auto text-emerald-600 font-semibold text-xs bg-emerald-50 px-2 py-0.5 rounded-full">
-                            <i class="fas fa-check-circle text-[10px]"></i> In Stock
+                        <span class="text-gray-400 hidden sm:inline">(${prod.reviewsCount || 25})</span>
+                        <span class="ml-auto text-emerald-600 font-semibold text-[10px] sm:text-xs bg-emerald-50 px-1.5 sm:px-2 py-0.5 rounded-full">
+                            <i class="fas fa-check-circle text-[9px] sm:text-[10px]"></i> In Stock
                         </span>
                     </div>
 
                     <h3 
                         onclick="openProductModal(${prod.id})"
-                        class="font-semibold text-gray-800 text-base leading-snug hover:text-red-500 cursor-pointer line-clamp-2 transition-colors mb-2" 
+                        class="font-bold text-gray-800 text-xs sm:text-base leading-snug hover:text-red-500 cursor-pointer line-clamp-2 transition-colors mb-1 sm:mb-2" 
                         title="${prod.name}">
                         ${prod.name}
                     </h3>
                 </div>
 
-                <div class="mt-4 pt-3 border-t border-gray-100">
-                    <div class="flex items-baseline gap-2 mb-3">
-                        <span class="text-2xl font-bold text-red-600">${config.currency} ${prod.price.toLocaleString()}</span>
+                <div class="mt-2 sm:mt-4 pt-2 sm:pt-3 border-t border-gray-100">
+                    <div class="flex items-baseline gap-1.5 mb-2 sm:mb-3">
+                        <span class="text-base sm:text-2xl font-black text-red-600">${config.currency} ${prod.price.toLocaleString()}</span>
                         ${prod.originalPrice ? `
-                            <span class="text-xs text-gray-400 line-through">${config.currency} ${prod.originalPrice.toLocaleString()}</span>
+                            <span class="text-[10px] sm:text-xs text-gray-400 line-through">${config.currency} ${prod.originalPrice.toLocaleString()}</span>
                         ` : ''}
                     </div>
 
-                    <div class="grid grid-cols-2 gap-2">
+                    <div class="flex flex-col sm:grid sm:grid-cols-2 gap-1.5 sm:gap-2">
                         <button 
                             onclick="addToCart(${prod.id})" 
-                            class="w-full py-2.5 px-2 bg-yellow-400 hover:bg-yellow-500 active:scale-95 text-gray-900 font-bold rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow-sm">
-                            <i class="fas fa-cart-plus"></i>
+                            class="w-full py-2 sm:py-2.5 px-2 bg-yellow-400 hover:bg-yellow-500 active:scale-95 text-gray-900 font-extrabold rounded-xl text-[11px] sm:text-xs flex items-center justify-center gap-1 transition-all shadow-xs">
+                            <i class="fas fa-cart-plus text-[10px] sm:text-xs"></i>
                             <span>Add To Basket</span>
                         </button>
                         <button 
                             onclick="buyNowDirect(${prod.id})" 
-                            class="w-full py-2.5 px-2 bg-red-600 hover:bg-red-700 active:scale-95 text-white font-bold rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow-sm">
-                            <i class="fas fa-bolt"></i>
+                            class="w-full py-2 sm:py-2.5 px-2 bg-red-600 hover:bg-red-700 active:scale-95 text-white font-extrabold rounded-xl text-[11px] sm:text-xs flex items-center justify-center gap-1 transition-all shadow-xs">
+                            <i class="fas fa-bolt text-[10px] sm:text-xs"></i>
                             <span>Buy Now</span>
                         </button>
                     </div>
@@ -1563,10 +1563,10 @@ function toggleWishlist(prodId, e) {
 // INITIALIZE CUSTOMER PORTAL & SEED MUHAMAD JAMEEL (SCREENSHOT MATCH)
 // ----------------------------------------------------------------
 function initCustomerPortal() {
-    // 1. Ensure Active Customer Muhamad Jameel (Exact match to uploaded screenshots)
-    let active = getActiveCustomer();
-    if (!active) {
-        active = {
+    // Register store owner (Muhammad Jameel) in customers database so he can log in whenever he wants
+    let allCusts = getCustomers();
+    if (!allCusts.some(c => c.email === 'mrjameel008@gmail.com')) {
+        allCusts.push({
             id: 'CUST-1000',
             name: 'Muhamad Jameel',
             email: 'mrjameel008@gmail.com',
@@ -1576,152 +1576,33 @@ function initCustomerPortal() {
             address: 'Main Market, Gulberg',
             password: 'jameel123',
             avatar: 'images/mj-logo.svg',
-            createdAt: '2026-10-01T10:00:00.000Z',
-            lastLogin: new Date().toISOString(),
-            loginCount: 12,
             status: 'active'
-        };
-        localStorage.setItem('mehar_toys_active_user', JSON.stringify(active));
-    }
-
-    // Ensure customer is registered in customers list
-    let allCusts = getCustomers();
-    if (!allCusts.some(c => c.phone === active.phone || c.email === active.email)) {
-        allCusts.unshift(active);
+        });
         saveCustomers(allCusts);
     }
 
-    // 2. Ensure Wishlist has 1 item (matches Image 1 & 2 badge "1")
+    // DO NOT force-login anyone! New visitors start as clean Guests.
+    // If the visitor previously signed in, they remain signed in; otherwise active is null.
+
+    // Initialize Wishlist if not set
     let wish = JSON.parse(localStorage.getItem('mehar_toys_wishlist'));
-    if (!wish || wish.length === 0) {
-        wish = [1]; // 4WD Monster RC Car
+    if (!wish) {
+        wish = [];
         localStorage.setItem('mehar_toys_wishlist', JSON.stringify(wish));
     }
 
-    // 3. Ensure Notifications has 3 items (matches Image 2 badge "3")
+    // Initialize Notifications
     let notifs = JSON.parse(localStorage.getItem('mehar_toys_notifications'));
     if (!notifs || notifs.length === 0) {
         notifs = [
-            { id: 1, title: 'Order Booked Successfully', message: 'Order #MT-8B739EF0-1D9D-4786-8975-07B440E9D631 is pending dispatch.', time: '1 hr ago', read: false, icon: 'fa-box' },
-            { id: 2, title: 'Delivered Order #MT-719283', message: 'Your toy parcel was safely delivered! We hope your kids love it.', time: 'Yesterday', read: true, icon: 'fa-truck-fast' },
-            { id: 3, title: '🎁 Welcome Bonus Offer', message: 'Use voucher WELCOME10 for 10% OFF on all creative toys.', time: '3 days ago', read: true, icon: 'fa-gift' }
+            { id: 1, title: '🎁 Welcome to Mehar Toys', message: 'Use voucher WELCOME10 for 10% OFF on all creative toys.', time: 'Just now', read: false, icon: 'fa-gift' }
         ];
         localStorage.setItem('mehar_toys_notifications', JSON.stringify(notifs));
-    }
-
-    // 4. Ensure Orders include Image 1's latest order and 5 previous orders (Total 6)
-    let orders = JSON.parse(localStorage.getItem('mehar_toys_orders')) || [];
-    const latestOrderId = 'MT-8B739EF0-1D9D-4786-8975-07B440E9D631';
-    const hasLatest = orders.some(o => o.id === latestOrderId);
-
-    if (!hasLatest) {
-        const jameelOrders = [
-            {
-                id: 'MT-8B739EF0-1D9D-4786-8975-07B440E9D631',
-                date: '3 Oct 2026',
-                timestamp: Date.now() - 3600000 * 18,
-                status: 'Pending',
-                customer: {
-                    name: 'Muhamad Jameel',
-                    phone: '+923228482860',
-                    email: 'mrjameel008@gmail.com',
-                    city: 'Lahore',
-                    province: 'Punjab',
-                    address: 'Main Market, Gulberg',
-                    notes: ''
-                },
-                items: [
-                    { name: 'Princess Doll Set', quantity: 26, price: 1999, image: 'https://images.unsplash.com/photo-1585366119957-e9730b6d0f60?auto=format&fit=crop&w=800&q=80' }
-                ],
-                subtotal: 51974,
-                shipping: 0,
-                grandTotal: 51974,
-                paymentMethod: 'Cash on Delivery • COD',
-                paymentStatus: 'Unpaid (COD)',
-                isPaid: false,
-                trxId: null,
-                paymentSlip: null,
-                province: 'Punjab'
-            },
-            {
-                id: 'MT-719283',
-                date: '28 Sep 2026',
-                timestamp: Date.now() - 86400000 * 6,
-                status: 'Delivered',
-                customer: { name: 'Muhamad Jameel', phone: '+923228482860', email: 'mrjameel008@gmail.com', city: 'Lahore', province: 'Punjab', address: 'Main Market, Gulberg' },
-                items: [{ name: '4WD High-Speed Monster RC Stunt Car', quantity: 2, price: 3499, image: 'https://images.unsplash.com/photo-1594787318286-3d835c1d207f?auto=format&fit=crop&w=800&q=80' }],
-                subtotal: 6998,
-                shipping: 0,
-                grandTotal: 6998,
-                paymentMethod: 'Cash on Delivery (COD)',
-                paymentStatus: 'Paid on Delivery',
-                isPaid: true
-            },
-            {
-                id: 'MT-654129',
-                date: '20 Sep 2026',
-                timestamp: Date.now() - 86400000 * 14,
-                status: 'Delivered',
-                customer: { name: 'Muhamad Jameel', phone: '+923228482860', email: 'mrjameel008@gmail.com', city: 'Lahore', province: 'Punjab', address: 'Main Market, Gulberg' },
-                items: [{ name: 'Montessori Wooden Sorting & Number Puzzle Board', quantity: 2, price: 1899, image: 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=800&q=80' }],
-                subtotal: 3798,
-                shipping: 250,
-                grandTotal: 4048,
-                paymentMethod: 'JazzCash / Easypaisa',
-                paymentStatus: 'Paid',
-                isPaid: true
-            },
-            {
-                id: 'MT-589104',
-                date: '12 Sep 2026',
-                timestamp: Date.now() - 86400000 * 22,
-                status: 'Delivered',
-                customer: { name: 'Muhamad Jameel', phone: '+923228482860', email: 'mrjameel008@gmail.com', city: 'Lahore', province: 'Punjab', address: 'Main Market, Gulberg' },
-                items: [{ name: 'Smart Talking & Dancing Cactus', quantity: 1, price: 1499, image: 'https://images.unsplash.com/photo-1559454403-b8fb88521f11?auto=format&fit=crop&w=800&q=80' }],
-                subtotal: 1499,
-                shipping: 250,
-                grandTotal: 1749,
-                paymentMethod: 'Cash on Delivery (COD)',
-                paymentStatus: 'Paid on Delivery',
-                isPaid: true
-            },
-            {
-                id: 'MT-492108',
-                date: '2 Sep 2026',
-                timestamp: Date.now() - 86400000 * 32,
-                status: 'Delivered',
-                customer: { name: 'Muhamad Jameel', phone: '+923228482860', email: 'mrjameel008@gmail.com', city: 'Lahore', province: 'Punjab', address: 'Main Market, Gulberg' },
-                items: [{ name: 'Deluxe Princess Dream Dollhouse', quantity: 1, price: 4999, image: 'https://images.unsplash.com/photo-1585366119957-e9730b6d0f60?auto=format&fit=crop&w=800&q=80' }],
-                subtotal: 4999,
-                shipping: 250,
-                grandTotal: 5249,
-                paymentMethod: 'JazzCash / Easypaisa',
-                paymentStatus: 'Paid',
-                isPaid: true
-            },
-            {
-                id: 'MT-381029',
-                date: '18 Aug 2026',
-                timestamp: Date.now() - 86400000 * 47,
-                status: 'Delivered',
-                customer: { name: 'Muhamad Jameel', phone: '+923228482860', email: 'mrjameel008@gmail.com', city: 'Lahore', province: 'Punjab', address: 'Main Market, Gulberg' },
-                items: [{ name: 'Creative Magnetic Building Blocks Set (100 Pcs)', quantity: 1, price: 2799, image: 'https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=800&q=80' }],
-                subtotal: 2799,
-                shipping: 250,
-                grandTotal: 3049,
-                paymentMethod: 'Cash on Delivery (COD)',
-                paymentStatus: 'Paid on Delivery',
-                isPaid: true
-            }
-        ];
-
-        orders = [...jameelOrders, ...orders.filter(o => !jameelOrders.some(jo => jo.id === o.id))];
-        localStorage.setItem('mehar_toys_orders', JSON.stringify(orders));
     }
 }
 
 // ----------------------------------------------------------------
-// AUTH UI & HEADER STATUS UPDATE (MATCHING IMAGE 2)
+// AUTH UI & HEADER STATUS UPDATE
 // ----------------------------------------------------------------
 function updateAuthUI() {
     const customer = getActiveCustomer();
@@ -1738,13 +1619,23 @@ function updateAuthUI() {
     const portalTopWishlistBadge = document.getElementById('portal-top-wishlist-badge');
     const portalTopNotifBadge = document.getElementById('portal-top-notif-badge');
 
+    // Bottom Navigation Elements (Mobile & Tablet)
+    const bottomAvatarImg = document.getElementById('bottom-avatar-img');
+    const bottomGuestIcon = document.getElementById('bottom-guest-icon');
+    const bottomAccountText = document.getElementById('bottom-account-text');
+    const bottomWishlistBadge = document.getElementById('bottom-wishlist-badge');
+
     const wishlist = getWishlist();
     const notifs = JSON.parse(localStorage.getItem('mehar_toys_notifications')) || [];
-    const unreadNotifs = notifs.filter(n => !n.read).length || notifs.length;
+    const unreadNotifs = notifs.filter(n => !n.read).length || 0;
 
     if (headerWishlistBadge) headerWishlistBadge.textContent = wishlist.length;
     if (dropdownWishlistCount) dropdownWishlistCount.textContent = wishlist.length;
     if (portalTopWishlistBadge) portalTopWishlistBadge.textContent = wishlist.length;
+    if (bottomWishlistBadge) {
+        bottomWishlistBadge.textContent = wishlist.length;
+        bottomWishlistBadge.classList.toggle('hidden', wishlist.length === 0);
+    }
 
     if (headerNotifBadge) headerNotifBadge.textContent = unreadNotifs;
     if (dropdownNotifCount) dropdownNotifCount.textContent = unreadNotifs;
@@ -1754,11 +1645,18 @@ function updateAuthUI() {
         if (guestArea) guestArea.classList.add('hidden');
         if (userMenuContainer) userMenuContainer.classList.remove('hidden');
         if (dropdownName) dropdownName.textContent = customer.name;
-        if (dropdownEmail) dropdownEmail.textContent = customer.email || 'mrjameel008@gmail.com';
+        if (dropdownEmail) dropdownEmail.textContent = customer.email || '';
         
         const avatarSrc = customer.avatar || 'images/mj-logo.svg';
         if (headerAvatarImg) headerAvatarImg.src = avatarSrc;
         if (dropdownAvatarImg) dropdownAvatarImg.src = avatarSrc;
+
+        if (bottomAvatarImg) {
+            bottomAvatarImg.src = avatarSrc;
+            bottomAvatarImg.classList.remove('hidden');
+        }
+        if (bottomGuestIcon) bottomGuestIcon.classList.add('hidden');
+        if (bottomAccountText) bottomAccountText.textContent = (customer.name || 'Account').split(' ')[0];
 
         const portalSideAvatar = document.getElementById('portal-sidebar-avatar');
         if (portalSideAvatar) portalSideAvatar.src = avatarSrc;
@@ -1777,6 +1675,19 @@ function updateAuthUI() {
     } else {
         if (guestArea) guestArea.classList.remove('hidden');
         if (userMenuContainer) userMenuContainer.classList.add('hidden');
+
+        if (bottomAvatarImg) bottomAvatarImg.classList.add('hidden');
+        if (bottomGuestIcon) bottomGuestIcon.classList.remove('hidden');
+        if (bottomAccountText) bottomAccountText.textContent = 'Sign In';
+    }
+}
+
+function handleMobileAccountClick() {
+    const cust = getActiveCustomer();
+    if (cust) {
+        openCustomerPortal('account');
+    } else {
+        openAuthModal('login');
     }
 }
 
