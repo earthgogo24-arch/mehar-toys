@@ -8,7 +8,7 @@ const ADMIN_PASS = "admin123";
 const ALL_WORKSPACE_TABS = [
     'dashboard', 'analytics', 'reports', 'products', 'inventory', 
     'orders', 'categories', 'customers', 'reviews', 'messages', 
-    'coupons', 'notifications', 'settings', 'hero-banner'
+    'coupons', 'notifications', 'settings', 'hero-banner', 'vouchers-strip'
 ];
 
 let currentAdminTab = 'dashboard';
@@ -155,6 +155,9 @@ function switchAdminTab(tab) {
             break;
         case 'hero-banner':
             renderHeroBannerTab();
+            break;
+        case 'vouchers-strip':
+            renderVouchersStripTab();
             break;
     }
 }
@@ -4142,3 +4145,253 @@ window.handleHeroFileUpload = handleHeroFileUpload;
 window.selectHeroPreset = selectHeroPreset;
 window.saveHeroBannerSettings = saveHeroBannerSettings;
 window.resetHeroBannerDefaults = resetHeroBannerDefaults;
+
+
+// ================================================================
+// MODULE 15: VOUCHERS BANNER & PROMO STRIP CONTROLLER
+// ================================================================
+
+const DEFAULT_VOUCHERS_STRIP_CONFIG = {
+    title: "Claim Vouchers to Save More!",
+    tag: "LIMITED",
+    subtitle: "Click to collect discount vouchers for immediate checkout",
+    v1: {
+        title: "Rs. 300 OFF",
+        sub: "On orders Rs. 3,500+",
+        code: "SAVE300"
+    },
+    v2: {
+        title: "FREE SHIPPING",
+        sub: "Nationwide Pakistan",
+        code: "FREESHIP"
+    },
+    v3: {
+        title: "10% OFF",
+        sub: "Code: WELCOME10",
+        code: "WELCOME10"
+    }
+};
+
+const VOUCHER_PRESETS = {
+    default: DEFAULT_VOUCHERS_STRIP_CONFIG,
+    eid: {
+        title: "🌙 Eid Mubarak Special Vouchers!",
+        tag: "EID GALA",
+        subtitle: "Collect Eid gift vouchers & celebrate with biggest toy savings",
+        v1: { title: "Rs. 500 OFF", sub: "On orders Rs. 4,000+", code: "EID500" },
+        v2: { title: "FREE SHIPPING", sub: "All Pakistan Delivery", code: "FREESHIP" },
+        v3: { title: "15% OFF", sub: "Code: EIDMUBARAK", code: "EIDMUBARAK" }
+    },
+    weekend: {
+        title: "⚡ Super Weekend Flash Deals!",
+        tag: "WEEKEND ONLY",
+        subtitle: "Special limited-time vouchers for weekend toy shoppers",
+        v1: { title: "Rs. 400 OFF", sub: "On orders Rs. 3,000+", code: "WEEKEND400" },
+        v2: { title: "FREE SHIPPING", sub: "Express 24-48h Dispatch", code: "FREESHIP" },
+        v3: { title: "20% OFF", sub: "Code: FLASH20", code: "FLASH20" }
+    },
+    mega: {
+        title: "🎉 Grand Toy Festival Vouchers!",
+        tag: "MEGA SALE",
+        subtitle: "Collect all vouchers for instant savings at checkout",
+        v1: { title: "Rs. 600 OFF", sub: "On orders Rs. 5,000+", code: "MEGA600" },
+        v2: { title: "FREE SHIPPING", sub: "Doorstep Delivery Free", code: "FREESHIP" },
+        v3: { title: "25% OFF", sub: "Code: TOYFEST25", code: "TOYFEST25" }
+    }
+};
+
+function getVouchersStripConfig() {
+    try {
+        const stored = localStorage.getItem('mehar_toys_voucher_strip_config');
+        if (stored) return JSON.parse(stored);
+    } catch(e) {
+        console.warn('Error reading voucher strip config:', e);
+    }
+    return DEFAULT_VOUCHERS_STRIP_CONFIG;
+}
+
+function renderVouchersStripTab() {
+    const config = getVouchersStripConfig();
+
+    const titleInput = document.getElementById('vstrip-input-title');
+    const tagInput = document.getElementById('vstrip-input-tag');
+    const subtitleInput = document.getElementById('vstrip-input-subtitle');
+
+    const v1Title = document.getElementById('vstrip-input-v1-title');
+    const v1Sub = document.getElementById('vstrip-input-v1-sub');
+    const v1Code = document.getElementById('vstrip-input-v1-code');
+
+    const v2Title = document.getElementById('vstrip-input-v2-title');
+    const v2Sub = document.getElementById('vstrip-input-v2-sub');
+    const v2Code = document.getElementById('vstrip-input-v2-code');
+
+    const v3Title = document.getElementById('vstrip-input-v3-title');
+    const v3Sub = document.getElementById('vstrip-input-v3-sub');
+    const v3Code = document.getElementById('vstrip-input-v3-code');
+
+    if (titleInput) titleInput.value = config.title || '';
+    if (tagInput) tagInput.value = config.tag || '';
+    if (subtitleInput) subtitleInput.value = config.subtitle || '';
+
+    if (v1Title) v1Title.value = (config.v1 && config.v1.title) || '';
+    if (v1Sub) v1Sub.value = (config.v1 && config.v1.sub) || '';
+    if (v1Code) v1Code.value = (config.v1 && config.v1.code) || '';
+
+    if (v2Title) v2Title.value = (config.v2 && config.v2.title) || '';
+    if (v2Sub) v2Sub.value = (config.v2 && config.v2.sub) || '';
+    if (v2Code) v2Code.value = (config.v2 && config.v2.code) || '';
+
+    if (v3Title) v3Title.value = (config.v3 && config.v3.title) || '';
+    if (v3Sub) v3Sub.value = (config.v3 && config.v3.sub) || '';
+    if (v3Code) v3Code.value = (config.v3 && config.v3.code) || '';
+
+    updateVouchersStripAdminPreview();
+}
+
+function updateVouchersStripAdminPreview() {
+    const titleInput = document.getElementById('vstrip-input-title');
+    const tagInput = document.getElementById('vstrip-input-tag');
+    const subtitleInput = document.getElementById('vstrip-input-subtitle');
+
+    const v1Title = document.getElementById('vstrip-input-v1-title');
+    const v1Sub = document.getElementById('vstrip-input-v1-sub');
+
+    const v2Title = document.getElementById('vstrip-input-v2-title');
+    const v2Sub = document.getElementById('vstrip-input-v2-sub');
+
+    const v3Title = document.getElementById('vstrip-input-v3-title');
+    const v3Sub = document.getElementById('vstrip-input-v3-sub');
+
+    const previewTitle = document.getElementById('preview-vstrip-title');
+    const previewTag = document.getElementById('preview-vstrip-tag');
+    const previewSubtitle = document.getElementById('preview-vstrip-subtitle');
+
+    const pChip1Title = document.getElementById('preview-chip-1-title');
+    const pChip1Sub = document.getElementById('preview-chip-1-sub');
+
+    const pChip2Title = document.getElementById('preview-chip-2-title');
+    const pChip2Sub = document.getElementById('preview-chip-2-sub');
+
+    const pChip3Title = document.getElementById('preview-chip-3-title');
+    const pChip3Sub = document.getElementById('preview-chip-3-sub');
+
+    if (previewTitle && titleInput) previewTitle.textContent = titleInput.value || DEFAULT_VOUCHERS_STRIP_CONFIG.title;
+    if (previewTag && tagInput) previewTag.textContent = tagInput.value || DEFAULT_VOUCHERS_STRIP_CONFIG.tag;
+    if (previewSubtitle && subtitleInput) previewSubtitle.textContent = subtitleInput.value || DEFAULT_VOUCHERS_STRIP_CONFIG.subtitle;
+
+    if (pChip1Title && v1Title) pChip1Title.textContent = v1Title.value || DEFAULT_VOUCHERS_STRIP_CONFIG.v1.title;
+    if (pChip1Sub && v1Sub) pChip1Sub.textContent = v1Sub.value || DEFAULT_VOUCHERS_STRIP_CONFIG.v1.sub;
+
+    if (pChip2Title && v2Title) pChip2Title.textContent = v2Title.value || DEFAULT_VOUCHERS_STRIP_CONFIG.v2.title;
+    if (pChip2Sub && v2Sub) pChip2Sub.textContent = v2Sub.value || DEFAULT_VOUCHERS_STRIP_CONFIG.v2.sub;
+
+    if (pChip3Title && v3Title) pChip3Title.textContent = v3Title.value || DEFAULT_VOUCHERS_STRIP_CONFIG.v3.title;
+    if (pChip3Sub && v3Sub) pChip3Sub.textContent = v3Sub.value || DEFAULT_VOUCHERS_STRIP_CONFIG.v3.sub;
+}
+
+function handleVouchersStripInputChange() {
+    updateVouchersStripAdminPreview();
+}
+
+function selectVouchersPreset(presetKey) {
+    const preset = VOUCHER_PRESETS[presetKey] || DEFAULT_VOUCHERS_STRIP_CONFIG;
+
+    const titleInput = document.getElementById('vstrip-input-title');
+    const tagInput = document.getElementById('vstrip-input-tag');
+    const subtitleInput = document.getElementById('vstrip-input-subtitle');
+
+    const v1Title = document.getElementById('vstrip-input-v1-title');
+    const v1Sub = document.getElementById('vstrip-input-v1-sub');
+    const v1Code = document.getElementById('vstrip-input-v1-code');
+
+    const v2Title = document.getElementById('vstrip-input-v2-title');
+    const v2Sub = document.getElementById('vstrip-input-v2-sub');
+    const v2Code = document.getElementById('vstrip-input-v2-code');
+
+    const v3Title = document.getElementById('vstrip-input-v3-title');
+    const v3Sub = document.getElementById('vstrip-input-v3-sub');
+    const v3Code = document.getElementById('vstrip-input-v3-code');
+
+    if (titleInput) titleInput.value = preset.title;
+    if (tagInput) tagInput.value = preset.tag;
+    if (subtitleInput) subtitleInput.value = preset.subtitle;
+
+    if (v1Title) v1Title.value = preset.v1.title;
+    if (v1Sub) v1Sub.value = preset.v1.sub;
+    if (v1Code) v1Code.value = preset.v1.code;
+
+    if (v2Title) v2Title.value = preset.v2.title;
+    if (v2Sub) v2Sub.value = preset.v2.sub;
+    if (v2Code) v2Code.value = preset.v2.code;
+
+    if (v3Title) v3Title.value = preset.v3.title;
+    if (v3Sub) v3Sub.value = preset.v3.sub;
+    if (v3Code) v3Code.value = preset.v3.code;
+
+    updateVouchersStripAdminPreview();
+}
+
+function saveVouchersStripSettings() {
+    const titleInput = document.getElementById('vstrip-input-title');
+    const tagInput = document.getElementById('vstrip-input-tag');
+    const subtitleInput = document.getElementById('vstrip-input-subtitle');
+
+    const v1Title = document.getElementById('vstrip-input-v1-title');
+    const v1Sub = document.getElementById('vstrip-input-v1-sub');
+    const v1Code = document.getElementById('vstrip-input-v1-code');
+
+    const v2Title = document.getElementById('vstrip-input-v2-title');
+    const v2Sub = document.getElementById('vstrip-input-v2-sub');
+    const v2Code = document.getElementById('vstrip-input-v2-code');
+
+    const v3Title = document.getElementById('vstrip-input-v3-title');
+    const v3Sub = document.getElementById('vstrip-input-v3-sub');
+    const v3Code = document.getElementById('vstrip-input-v3-code');
+
+    const config = {
+        title: (titleInput && titleInput.value) ? titleInput.value : DEFAULT_VOUCHERS_STRIP_CONFIG.title,
+        tag: (tagInput && tagInput.value) ? tagInput.value : DEFAULT_VOUCHERS_STRIP_CONFIG.tag,
+        subtitle: (subtitleInput && subtitleInput.value) ? subtitleInput.value : DEFAULT_VOUCHERS_STRIP_CONFIG.subtitle,
+        v1: {
+            title: (v1Title && v1Title.value) ? v1Title.value : DEFAULT_VOUCHERS_STRIP_CONFIG.v1.title,
+            sub: (v1Sub && v1Sub.value) ? v1Sub.value : DEFAULT_VOUCHERS_STRIP_CONFIG.v1.sub,
+            code: (v1Code && v1Code.value) ? v1Code.value.toUpperCase() : DEFAULT_VOUCHERS_STRIP_CONFIG.v1.code
+        },
+        v2: {
+            title: (v2Title && v2Title.value) ? v2Title.value : DEFAULT_VOUCHERS_STRIP_CONFIG.v2.title,
+            sub: (v2Sub && v2Sub.value) ? v2Sub.value : DEFAULT_VOUCHERS_STRIP_CONFIG.v2.sub,
+            code: (v2Code && v2Code.value) ? v2Code.value.toUpperCase() : DEFAULT_VOUCHERS_STRIP_CONFIG.v2.code
+        },
+        v3: {
+            title: (v3Title && v3Title.value) ? v3Title.value : DEFAULT_VOUCHERS_STRIP_CONFIG.v3.title,
+            sub: (v3Sub && v3Sub.value) ? v3Sub.value : DEFAULT_VOUCHERS_STRIP_CONFIG.v3.sub,
+            code: (v3Code && v3Code.value) ? v3Code.value.toUpperCase() : DEFAULT_VOUCHERS_STRIP_CONFIG.v3.code
+        },
+        updatedAt: new Date().toISOString()
+    };
+
+    localStorage.setItem('mehar_toys_voucher_strip_config', JSON.stringify(config));
+
+    try {
+        window.dispatchEvent(new Event('storage'));
+    } catch(e) {}
+
+    alert("✅ Zabardast! Homepage Vouchers Banner kamyabi se save ho gaya hai. Website par live change ho chuki hai!");
+}
+
+function resetVouchersStripDefaults() {
+    if (confirm("Kya aap Vouchers Banner ko default setting par reset karna chahte hain?")) {
+        localStorage.setItem('mehar_toys_voucher_strip_config', JSON.stringify(DEFAULT_VOUCHERS_STRIP_CONFIG));
+        renderVouchersStripTab();
+        alert("Vouchers Banner default settings par restore ho gaya!");
+    }
+}
+
+// Global exports
+window.getVouchersStripConfig = getVouchersStripConfig;
+window.renderVouchersStripTab = renderVouchersStripTab;
+window.updateVouchersStripAdminPreview = updateVouchersStripAdminPreview;
+window.handleVouchersStripInputChange = handleVouchersStripInputChange;
+window.selectVouchersPreset = selectVouchersPreset;
+window.saveVouchersStripSettings = saveVouchersStripSettings;
+window.resetVouchersStripDefaults = resetVouchersStripDefaults;
