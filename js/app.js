@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initCustomerPortal();
     PRODUCTS = getProducts();
     initStoreInfo();
+    initAnnouncementBar();
     renderCategories();
     renderProducts();
     updateCartUI();
@@ -20,6 +21,78 @@ document.addEventListener('DOMContentLoaded', () => {
     init3DHeroParallax();
     setupEventListeners();
 });
+
+// ----------------------------------------------------------------
+// TOP ANNOUNCEMENT BAR ROTATOR (LUXURY SLEEK TICKER)
+// ----------------------------------------------------------------
+const ANNOUNCEMENTS = [
+    {
+        tag: 'SPECIAL OFFER',
+        tagBg: 'from-amber-400 to-amber-500 text-slate-950',
+        icon: '🎉',
+        msg: 'Free Delivery all over Pakistan on orders above Rs. 5,999!'
+    },
+    {
+        tag: 'CASH ON DELIVERY',
+        tagBg: 'from-emerald-400 to-teal-500 text-slate-950',
+        icon: '💵',
+        msg: 'Pay Cash at Your Doorstep Nationwide | Fast Dispatch'
+    },
+    {
+        tag: '10% DISCOUNT',
+        tagBg: 'from-rose-400 to-red-500 text-white',
+        icon: '🎁',
+        msg: 'Use coupon code WELCOME10 for 10% OFF your order!'
+    },
+    {
+        tag: '100% ORIGINAL',
+        tagBg: 'from-sky-400 to-blue-500 text-white',
+        icon: '⚡',
+        msg: 'Safe, Tested & Premium Quality Toys For Happy Kids!'
+    }
+];
+
+let currentAnnouncementIdx = 0;
+let announcementTimer = null;
+
+function renderAnnouncement() {
+    const item = ANNOUNCEMENTS[currentAnnouncementIdx];
+    const tagEl = document.getElementById('announcement-tag');
+    const msgEl = document.getElementById('announcement-msg');
+    const contentEl = document.getElementById('announcement-content');
+    if (!tagEl || !msgEl || !contentEl) return;
+
+    contentEl.style.opacity = '0';
+    contentEl.style.transform = 'translateY(4px)';
+
+    setTimeout(() => {
+        tagEl.className = `shrink-0 bg-gradient-to-r ${item.tagBg} font-black text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider shadow-2xs`;
+        tagEl.textContent = item.tag;
+        msgEl.innerHTML = `${item.icon} ${item.msg}`;
+        contentEl.style.opacity = '1';
+        contentEl.style.transform = 'translateY(0)';
+    }, 180);
+}
+
+function changeAnnouncement(dir) {
+    currentAnnouncementIdx = (currentAnnouncementIdx + dir + ANNOUNCEMENTS.length) % ANNOUNCEMENTS.length;
+    renderAnnouncement();
+    restartAnnouncementTimer();
+}
+window.changeAnnouncement = changeAnnouncement;
+
+function initAnnouncementBar() {
+    renderAnnouncement();
+    restartAnnouncementTimer();
+}
+
+function restartAnnouncementTimer() {
+    if (announcementTimer) clearInterval(announcementTimer);
+    announcementTimer = setInterval(() => {
+        currentAnnouncementIdx = (currentAnnouncementIdx + 1) % ANNOUNCEMENTS.length;
+        renderAnnouncement();
+    }, 3800);
+}
 
 // Setup Store Info from Config
 function initStoreInfo() {

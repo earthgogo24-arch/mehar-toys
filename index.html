@@ -30,19 +30,79 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
+
+    <!-- Global App Styles & Complete Scrollbar Suppression -->
+    <style>
+        /* Complete scrollbar suppression across Chrome, Safari, Firefox, Edge */
+        .no-scrollbar::-webkit-scrollbar,
+        .scrollbar-none::-webkit-scrollbar,
+        .overflow-x-auto::-webkit-scrollbar,
+        #categories-container::-webkit-scrollbar,
+        nav::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+            -webkit-appearance: none !important;
+            background: transparent !important;
+        }
+
+        .no-scrollbar,
+        .scrollbar-none,
+        .overflow-x-auto,
+        #categories-container,
+        nav {
+            -ms-overflow-style: none !important;
+            scrollbar-width: none !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+
+        #announcement-content {
+            transition: opacity 0.22s ease-in-out, transform 0.22s ease-in-out;
+        }
+    </style>
 </head>
 <body class="bg-[#FDFBF7] text-[#2B2D42] min-h-screen flex flex-col antialiased pb-16 md:pb-0 overflow-x-hidden">
 
-    <!-- Top Announcement Bar -->
-    <div class="bg-gradient-to-r from-red-500 via-pink-500 to-amber-500 text-white text-xs font-semibold py-2 px-4 text-center tracking-wide">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-1">
-            <div class="flex items-center gap-2">
-                <span class="bg-white/20 px-2 py-0.5 rounded-full text-[11px] uppercase tracking-wider font-extrabold animate-pulse">Special Offer</span>
-                <span>🎉 Free Delivery all over Pakistan on orders above Rs. 5,999!</span>
+    <!-- Top Announcement Bar (Ultra-Professional Luxury Ticker) -->
+    <div class="bg-gradient-to-r from-slate-950 via-zinc-900 to-slate-950 text-white text-xs border-b border-amber-500/20 relative z-40 select-none shadow-xs">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 h-9 flex items-center justify-between">
+            <!-- Left Info (Desktop) -->
+            <div class="hidden lg:flex items-center gap-2 text-slate-300 font-medium text-[11px]">
+                <span class="inline-flex items-center justify-center w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span class="font-extrabold text-amber-400">MEHAR TOYS</span>
+                <span class="text-slate-600">•</span>
+                <span class="text-slate-300">Pakistan's Premium Kids Toy Store 🇵🇰</span>
             </div>
-            <div class="flex items-center gap-4 text-[11px]">
-                <span><i class="fas fa-truck-fast mr-1"></i> Cash On Delivery Available</span>
-                <span><i class="fas fa-clock mr-1"></i> Fast Dispatch</span>
+
+            <!-- Center Dynamic Announcement (Mobile & Desktop) -->
+            <div class="flex-1 flex items-center justify-center gap-1.5 sm:gap-2">
+                <button type="button" onclick="changeAnnouncement(-1)" class="w-6 h-6 flex items-center justify-center rounded-full text-slate-400 hover:text-white hover:bg-white/10 text-xs transition active:scale-90" aria-label="Previous Offer">
+                    <i class="fas fa-chevron-left text-[9px]"></i>
+                </button>
+                
+                <div id="announcement-content" class="flex items-center justify-center gap-2 text-center transition-all duration-300 overflow-hidden">
+                    <span id="announcement-tag" class="shrink-0 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider shadow-2xs">
+                        SPECIAL OFFER
+                    </span>
+                    <span id="announcement-msg" class="text-[11px] sm:text-xs font-semibold text-slate-100 truncate max-w-[210px] sm:max-w-md md:max-w-lg">
+                        🎉 Free Delivery all over Pakistan on orders above Rs. 5,999!
+                    </span>
+                </div>
+
+                <button type="button" onclick="changeAnnouncement(1)" class="w-6 h-6 flex items-center justify-center rounded-full text-slate-400 hover:text-white hover:bg-white/10 text-xs transition active:scale-90" aria-label="Next Offer">
+                    <i class="fas fa-chevron-right text-[9px]"></i>
+                </button>
+            </div>
+
+            <!-- Right Info (Desktop) -->
+            <div class="hidden md:flex items-center gap-4 text-[11px] font-medium text-slate-300">
+                <span class="flex items-center gap-1.5 text-slate-300">
+                    <i class="fas fa-money-bill-wave text-emerald-400"></i> Cash On Delivery
+                </span>
+                <span class="text-slate-600">•</span>
+                <a href="https://wa.me/923228482860?text=Assalam-o-Alaikum%20Mehar%20Toys" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition flex items-center gap-1 font-bold text-slate-200">
+                    <i class="fab fa-whatsapp text-emerald-400"></i> 0322-8482860
+                </a>
             </div>
         </div>
     </div>
@@ -214,7 +274,7 @@
         </div>
 
         <!-- Mobile Search Bar -->
-        <div class="md:hidden px-4 pb-3">
+        <div class="md:hidden px-3 pt-1 pb-2.5">
             <div class="relative w-full">
                 <input 
                     type="text" 
@@ -222,29 +282,42 @@
                     autocomplete="off"
                     oninput="handleMobileSearchInput(this.value)"
                     placeholder="Search toys by name or type..." 
-                    class="w-full pl-10 pr-4 py-2 rounded-xl bg-gray-100 border border-transparent focus:border-yellow-400 focus:bg-white focus:outline-none text-xs"
+                    class="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-gray-100/90 border border-gray-200/80 focus:border-amber-400 focus:bg-white focus:outline-none text-xs transition-all shadow-inner"
                 />
-                <i class="fas fa-search absolute left-3.5 top-3 text-gray-400 text-xs"></i>
+                <i class="fas fa-search absolute left-3.5 top-3.5 text-gray-400 text-xs"></i>
                 <!-- Live Search Dropdown (Mobile) -->
                 <div id="mobile-search-live-dropdown" class="hidden absolute left-0 right-0 top-full mt-1.5 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50 max-h-80 overflow-y-auto">
                 </div>
             </div>
         </div>
 
-        <!-- Store Navigation Links Strip (Desktop & Mobile) -->
-        <nav class="bg-slate-50/90 border-t border-gray-100 px-4 sm:px-6 py-2">
-            <div class="max-w-7xl mx-auto flex items-center justify-between gap-4 overflow-x-auto no-scrollbar text-xs font-bold text-gray-700">
-                <div class="flex items-center gap-5 sm:gap-7 shrink-0">
-                    <a href="index.html" class="hover:text-red-600 transition flex items-center gap-1.5"><i class="fas fa-house text-amber-500"></i> Home</a>
-                    <a href="#products-section" class="hover:text-red-600 transition flex items-center gap-1.5"><i class="fas fa-shapes text-red-500"></i> Toys & Games</a>
-                    <a href="#about-section" class="hover:text-red-600 transition flex items-center gap-1.5"><i class="fas fa-heart text-pink-500"></i> About Us</a>
-                    <a href="#contact-section" class="hover:text-red-600 transition flex items-center gap-1.5 text-red-600 font-extrabold"><i class="fas fa-envelope-open-text text-red-500"></i> Contact Us</a>
-                    <a href="#faq-section" class="hover:text-red-600 transition flex items-center gap-1.5"><i class="fas fa-circle-question text-purple-500"></i> FAQ & Help</a>
+        <!-- Store Navigation Links Strip (Desktop & Mobile - No Scrollbar, Clean App Pills) -->
+        <nav class="bg-gray-50/90 border-t border-b border-gray-200/60 px-3 sm:px-6 py-2 shadow-2xs">
+            <div class="max-w-7xl mx-auto flex items-center justify-between gap-3 overflow-x-auto no-scrollbar scrollbar-none text-xs font-bold text-gray-700 select-none">
+                <div class="flex items-center gap-2 sm:gap-3 shrink-0 py-0.5">
+                    <a href="index.html" class="px-3.5 py-1.5 rounded-full bg-red-500 text-white flex items-center gap-1.5 font-bold shadow-xs hover:bg-red-600 transition">
+                        <i class="fas fa-house text-white text-[11px]"></i> <span>Home</span>
+                    </a>
+                    <a href="#products-section" class="px-3.5 py-1.5 rounded-full bg-white hover:bg-amber-50 text-gray-700 hover:text-amber-700 border border-gray-200/80 flex items-center gap-1.5 transition shadow-2xs">
+                        <i class="fas fa-shapes text-amber-500 text-[11px]"></i> <span>Toys & Games</span>
+                    </a>
+                    <a href="#about-section" class="px-3.5 py-1.5 rounded-full bg-white hover:bg-pink-50 text-gray-700 hover:text-pink-700 border border-gray-200/80 flex items-center gap-1.5 transition shadow-2xs">
+                        <i class="fas fa-heart text-pink-500 text-[11px]"></i> <span>About Us</span>
+                    </a>
+                    <a href="#contact-section" class="px-3.5 py-1.5 rounded-full bg-white hover:bg-emerald-50 text-gray-700 hover:text-emerald-700 border border-gray-200/80 flex items-center gap-1.5 transition shadow-2xs">
+                        <i class="fas fa-envelope-open-text text-emerald-500 text-[11px]"></i> <span>Contact</span>
+                    </a>
+                    <a href="#faq-section" class="px-3.5 py-1.5 rounded-full bg-white hover:bg-purple-50 text-gray-700 hover:text-purple-700 border border-gray-200/80 flex items-center gap-1.5 transition shadow-2xs">
+                        <i class="fas fa-circle-question text-purple-500 text-[11px]"></i> <span>FAQ</span>
+                    </a>
                 </div>
                 <div class="hidden md:flex items-center gap-3 text-[11px] font-bold text-gray-500 shrink-0">
-                    <span class="flex items-center gap-1"><i class="fas fa-truck-fast text-emerald-500"></i> Free Delivery on Rs. 5,999+</span>
-                    <span>•</span>
-                    <a href="https://wa.me/923228482860?text=Assalam-o-Alaikum%20Mehar%20Toys,%20mujhe%20inquiry%20karni%20hai" target="_blank" rel="noopener noreferrer" title="Chat on WhatsApp" class="w-7 h-7 rounded-xl bg-emerald-100 hover:bg-emerald-500 text-emerald-700 hover:text-white flex items-center justify-center transition-all shadow-2xs text-sm" aria-label="WhatsApp Chat"><i class="fab fa-whatsapp"></i></a>
+                    <span class="flex items-center gap-1.5 text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200/60">
+                        <i class="fas fa-truck-fast text-emerald-600"></i> Free Delivery on Rs. 5,999+
+                    </span>
+                    <a href="https://wa.me/923228482860?text=Assalam-o-Alaikum%20Mehar%20Toys,%20mujhe%20inquiry%20karni%20hai" target="_blank" rel="noopener noreferrer" class="px-3 py-1 rounded-full bg-emerald-100 hover:bg-emerald-500 text-emerald-800 hover:text-white flex items-center gap-1.5 transition-all text-xs font-bold" aria-label="WhatsApp Chat">
+                        <i class="fab fa-whatsapp"></i> Chat Support
+                    </a>
                 </div>
             </div>
         </nav>
