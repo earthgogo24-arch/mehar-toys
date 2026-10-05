@@ -1,0 +1,2005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEHAR TOYS | Luxury Admin Dashboard & Management</title>
+    <link rel="icon" href="https://fav.farm/🧸" />
+
+    <!-- Google Fonts: Plus Jakarta Sans & Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif']
+                    },
+                    colors: {
+                        brandRed: '#EF4444',
+                        brandYellow: '#F59E0B',
+                        brandGreen: '#10B981',
+                        brandBlue: '#3B82F6',
+                        sidebarDark: '#0F172A'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome 6 Free CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Chart.js CDN for Interactive Graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F8FAFC;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .stat-card-shadow {
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+        }
+        .sidebar-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: #e2e8f0 transparent;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- LOGIN SCREEN (If not authenticated) -->
+    <div id="login-screen" class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-100 via-amber-50 to-orange-50">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-slate-100 text-center">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 shadow-sm">
+                🧸
+            </div>
+            <h2 class="text-2xl font-black text-slate-900 font-heading">MEHAR TOYS</h2>
+            <p class="text-xs text-slate-500 mb-6 font-semibold">Owner & Admin Dashboard Login</p>
+
+            <div id="login-error" class="hidden mb-4 p-3 bg-red-50 text-red-700 text-xs rounded-xl border border-red-200 font-bold"></div>
+
+            <form onsubmit="handleLogin(event)" class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Username</label>
+                    <input 
+                        type="text" 
+                        id="admin-username" 
+                        required 
+                        value="admin"
+                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-red-500 outline-none text-xs font-semibold"
+                    />
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
+                    <input 
+                        type="password" 
+                        id="admin-password" 
+                        required 
+                        value="admin123"
+                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-red-500 outline-none text-xs font-semibold"
+                    />
+                </div>
+
+                <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-200 text-[11px] text-amber-900">
+                    💡 <strong>Default Login Details:</strong><br>
+                    Username: <span class="font-bold">admin</span> | Password: <span class="font-bold">admin123</span>
+                </div>
+
+                <button 
+                    type="submit" 
+                    class="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-extrabold rounded-xl shadow-lg transition-transform active:scale-98 text-xs">
+                    Sign In to Dashboard
+                </button>
+            </form>
+
+            <div class="mt-6 pt-4 border-t border-slate-100 text-xs">
+                <a href="index.html" class="text-slate-500 hover:text-red-500 flex items-center justify-center gap-1.5 font-bold">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Toy Store Website</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN ADMIN DASHBOARD LAYOUT -->
+    <div id="admin-dashboard" class="hidden min-h-screen flex">
+
+        <!-- ====================================================
+             LEFT SIDEBAR (MATCHING EXACT 13 ITEMS & PROFILE BLOCK)
+             ==================================================== -->
+        <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between flex-shrink-0 min-h-screen sticky top-0 h-screen overflow-hidden">
+            
+            <!-- Top Section with Brand & Navigation -->
+            <div class="flex flex-col flex-1 min-h-0">
+                <!-- Brand Header -->
+                <div class="p-5 pb-4 border-b border-slate-100 flex items-center gap-3 flex-shrink-0">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-400 flex items-center justify-center text-xl shadow-md">
+                        🧸
+                    </div>
+                    <div>
+                        <div class="font-black text-slate-900 text-base leading-none tracking-tight">MEHAR TOYS</div>
+                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1">Admin Panel</div>
+                    </div>
+                </div>
+
+                <!-- Navigation Section (Scrollable for all 13 items) -->
+                <div class="flex-1 overflow-y-auto px-3.5 py-4 sidebar-scroll">
+                    <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest px-3 mb-2">
+                        Your Workspace
+                    </div>
+                    <nav class="space-y-1">
+                        <!-- 1. Dashboard -->
+                        <button 
+                            id="nav-dashboard" 
+                            onclick="switchAdminTab('dashboard')" 
+                            class="workspace-nav-btn active-tab w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-bold bg-slate-900 text-white shadow-md transition-all">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fas fa-grid-2 text-sm text-amber-400"></i>
+                                <span>Dashboard</span>
+                            </div>
+                            <span class="active-dot w-2 h-2 rounded-full bg-amber-400"></span>
+                        </button>
+
+                        <!-- 2. Analytics -->
+                        <button 
+                            id="nav-analytics" 
+                            onclick="switchAdminTab('analytics')" 
+                            class="workspace-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fas fa-chart-line text-sm text-indigo-500"></i>
+                                <span>Analytics</span>
+                            </div>
+                            <span class="active-dot hidden w-2 h-2 rounded-full bg-amber-400"></span>
+                        </button>
+
+                        <!-- 3. Reports -->
+                        <button 
+                            id="nav-reports" 
+                            onclick="switchAdminTab('reports')" 
+                            class="workspace-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fas fa-file-invoice text-sm text-sky-500"></i>
+                                <span>Reports</span>
+                            </div>
+                            <span class="active-dot hidden w-2 h-2 rounded-full bg-amber-400"></span>
+                        </button>
+
+                        <!-- 4. Products -->
+                        <button 
+                            id="nav-products" 
+                            onclick="switchAdminTab('products')" 
+                            class="workspace-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fas fa-cube text-sm text-emerald-500"></i>
+                                <span>Products</span>
+                            </div>
+                            <span class="active-dot hidden w-2 h-2 rounded-full bg-amber-400"></span>
+                        </button>
+
+                        <!-- 5. Inventory -->
+                        <button 
+                            id="nav-inventory" 
+                            onclick="switchAdminTab('inventory')" 
+                            class="workspace-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fas fa-boxes-stacked text-sm text-teal-500"></i>
+                                <span>Inventory</span>
+                            </div>
+                            <span class="active-dot hidden w-2 h-2 rounded-full bg-amber-400"></span>
+                        </button>
+
+                        <!-- 6. Orders -->
+                        <button 
+                            id="nav-orders" 
+                            onclick="switchAdminTab('orders')" 
+                            class="workspace-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fas fa-bag-shopping text-sm text-blue-500"></i>
+                                <span>Orders</span>
+                            </div>
+                            <span id="sidebar-order-badge" class="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">
+                                Live
+                            </span>
+                        </button>
+
+                        <!-- 7. Categories -->
+                        <button 
+                            id="nav-categories" 
+                            onclick="switchAdminTab('categories')" 
+                            class="workspace-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fas fa-layer-group text-sm text-violet-500"></i>
+                                <span>Categories</span>
+                            </div>
+                            <span class="active-dot hidden w-2 h-2 rounded-full bg-amber-400"></span>
+                        </button>
+
+                        <!-- 8. Customers -->
+                        <button 
+                            id="nav-customers" 
+                            onclick="switchAdminTab('customers')" 
+                            class="workspace-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fas fa-users text-sm text-purple-500"></i>
+                                <span>Customers</span>
+                            </div>
+                            <span class="active-dot hidden w-2 h-2 rounded-full bg-amber-400"></span>
+                        </button>
+
+                        <!-- 9. Reviews -->
+                        <button 
+                            id="nav-reviews" 
+                            onclick="switchAdminTab('reviews')" 
+                            class="workspace-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fas fa-star text-sm text-amber-500"></i>
+                                <span>Reviews</span>
+                            </div>
+                            <span class="active-dot hidden w-2 h-2 rounded-full bg-amber-400"></span>
+                        </button>
+
+                        <!-- 10. Messages -->
+                        <button 
+                            id="nav-messages" 
+                            onclick="switchAdminTab('messages')" 
+                            class="workspace-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fas fa-message text-sm text-rose-500"></i>
+                                <span>Messages</span>
+                            </div>
+                            <span class="active-dot hidden w-2 h-2 rounded-full bg-amber-400"></span>
+                        </button>
+
+                        <!-- 11. Coupons -->
+                        <button 
+                            id="nav-coupons" 
+                            onclick="switchAdminTab('coupons')" 
+                            class="workspace-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fas fa-ticket text-sm text-orange-500"></i>
+                                <span>Coupons</span>
+                            </div>
+                            <span class="active-dot hidden w-2 h-2 rounded-full bg-amber-400"></span>
+                        </button>
+
+                        <!-- 12. Notifications -->
+                        <button 
+                            id="nav-notifications" 
+                            onclick="switchAdminTab('notifications')" 
+                            class="workspace-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fas fa-bell text-sm text-pink-500"></i>
+                                <span>Notifications</span>
+                            </div>
+                            <span class="active-dot hidden w-2 h-2 rounded-full bg-amber-400"></span>
+                        </button>
+
+                        <!-- 13. Settings -->
+                        <button 
+                            id="nav-settings" 
+                            onclick="switchAdminTab('settings')" 
+                            class="workspace-nav-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                            <div class="flex items-center gap-2.5">
+                                <i class="fas fa-gear text-sm text-slate-500"></i>
+                                <span>Settings</span>
+                            </div>
+                            <span class="active-dot hidden w-2 h-2 rounded-full bg-amber-400"></span>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Sidebar Bottom Profile Section (EXACT MATCH TO SCREENSHOT) -->
+            <div class="p-3.5 border-t border-slate-100 space-y-2.5 bg-slate-50/60 flex-shrink-0">
+                <div class="flex items-center justify-between p-2 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                    <div class="flex items-center gap-2.5">
+                        <!-- Beige/Sand badge with "MT" -->
+                        <div class="w-9 h-9 rounded-xl bg-[#EFE8D8] text-[#5C4D32] font-black flex items-center justify-center text-xs tracking-wider border border-[#E2D8C0]">
+                            MT
+                        </div>
+                        <div class="min-w-0">
+                            <div class="text-[10px] text-slate-400 font-semibold leading-tight">Store Admin</div>
+                            <div class="text-xs font-black text-slate-900 leading-tight">MEHAR TOYS</div>
+                        </div>
+                    </div>
+                    <!-- Live green status dot -->
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" title="System Online"></span>
+                </div>
+
+                <div class="flex gap-1.5">
+                    <a 
+                        href="index.html" 
+                        target="_blank" 
+                        class="flex-1 py-2 px-2.5 bg-white hover:bg-slate-100 text-slate-700 font-bold rounded-xl text-[11px] border border-slate-200 flex items-center justify-center gap-1.5 transition-all shadow-sm">
+                        <span>Visit Storefront</span>
+                        <i class="fas fa-arrow-up-right-from-square text-[10px] text-slate-400"></i>
+                    </a>
+                    <button 
+                        onclick="handleLogout()" 
+                        class="py-2 px-3 bg-red-50 hover:bg-red-100 text-red-600 font-bold rounded-xl text-xs transition-colors"
+                        title="Logout Admin">
+                        <i class="fas fa-arrow-right-from-bracket"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ====================================================
+             MAIN DASHBOARD CONTENT AREA
+             ==================================================== -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+
+            <!-- Top Header Bar -->
+            <header class="bg-white border-b border-slate-200 sticky top-0 z-30 px-6 py-3.5 flex items-center justify-between gap-4">
+                <!-- Global Search -->
+                <div class="relative w-full max-w-md">
+                    <input 
+                        type="text" 
+                        id="global-search" 
+                        oninput="orderSearchQuery = this.value; renderFullOrdersTable();"
+                        placeholder="Search orders, products, customers..." 
+                        class="w-full pl-10 pr-4 py-2 rounded-2xl bg-slate-100 border border-transparent focus:bg-white focus:border-slate-300 outline-none text-xs transition-all"
+                    />
+                    <i class="fas fa-search absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+                </div>
+
+                <!-- Right Header Actions -->
+                <div class="flex items-center gap-3">
+                    <div id="header-supabase-badge" class="hidden sm:flex items-center gap-2 text-xs font-extrabold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-300 shadow-xs">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span>🟢 Supabase Cloud: Live</span>
+                    </div>
+
+                    <div class="hidden md:flex items-center gap-2 text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                        <span>Store Live & Accepting Orders</span>
+                    </div>
+
+                    <!-- Notification Bell -->
+                    <button onclick="switchAdminTab('notifications')" class="relative p-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors" title="View Notifications">
+                        <i class="fas fa-bell text-sm"></i>
+                        <span id="notif-badge-count" class="hidden absolute -top-1 -right-1 bg-red-500 text-white font-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+                            0
+                        </span>
+                    </button>
+
+                    <!-- Owner Profile Pill -->
+                    <div class="flex items-center gap-2 pl-2 border-l border-slate-200">
+                        <div class="w-8 h-8 rounded-full bg-amber-400 text-slate-900 font-extrabold flex items-center justify-center text-xs shadow-sm">
+                            MJ
+                        </div>
+                        <div class="hidden sm:block text-left">
+                            <div class="text-xs font-extrabold text-slate-800 leading-none">Muhammad Jameel</div>
+                            <div class="text-[10px] text-slate-400 mt-0.5">Admin (Store Owner)</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Inner Views Container -->
+            <div class="p-6 sm:p-8 space-y-6 flex-1">
+
+                <!-- ==============================================
+                     VIEW 1: DASHBOARD OVERVIEW (REFERENCE MATCH)
+                     ============================================== -->
+                <section id="view-dashboard" class="space-y-6">
+
+                    <!-- Breadcrumb, Greeting & Refresh -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <div id="top-breadcrumb" class="text-[11px] font-black uppercase tracking-wider text-slate-400 mb-1">
+                                MEHAR TOYS / DASHBOARD
+                            </div>
+                            <h2 id="admin-greeting-text" class="text-2xl sm:text-3xl font-black text-slate-900 font-heading">
+                                Good Morning, <span class="text-red-500 font-extrabold">Muhammad Jameel</span>
+                            </h2>
+                            <p class="text-xs text-slate-500 mt-0.5">Here's what's happening with MEHAR TOYS today.</p>
+                        </div>
+
+                        <div class="flex items-center flex-wrap gap-2.5 self-start sm:self-auto">
+                            <button 
+                                type="button"
+                                onclick="handleSyncDataToSupabase()"
+                                class="px-3.5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow-sm flex items-center gap-2 active:scale-95 transition-all"
+                                title="Aapke tamam khilone aur orders Supabase Cloud me upload karega">
+                                <i class="fas fa-cloud-arrow-up"></i>
+                                <span>Sync All to Cloud</span>
+                            </button>
+
+                            <button 
+                                onclick="loadAllDashboardData(); alert('Dashboard refreshed with latest data! 🔄');"
+                                class="px-4 py-2.5 rounded-2xl bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs border border-slate-200 shadow-sm flex items-center gap-2 active:scale-95 transition-all">
+                                <i class="fas fa-rotate-right text-red-500"></i>
+                                <span>Refresh Live Data</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 6 METRIC STAT CARDS (EXACT MATCH TO SCREENSHOT GRID) -->
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
+                        
+                        <!-- 1. Total Sales -->
+                        <div class="bg-white p-4 rounded-3xl border border-slate-200 stat-card-shadow flex flex-col justify-between relative overflow-hidden">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[11px] font-extrabold text-slate-400">Total Sales</span>
+                                <div class="w-7 h-7 rounded-xl bg-red-50 text-red-500 flex items-center justify-center text-xs">
+                                    <i class="fas fa-chart-line-up"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div id="stat-total-sales" class="text-lg sm:text-xl font-black text-slate-900 leading-tight">Rs. 0</div>
+                                <div class="text-[10px] text-slate-400 mt-1 truncate">All verified revenue</div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Total Orders -->
+                        <div class="bg-white p-4 rounded-3xl border border-slate-200 stat-card-shadow flex flex-col justify-between relative overflow-hidden">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[11px] font-extrabold text-slate-400">Total Orders</span>
+                                <div class="w-7 h-7 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center text-xs">
+                                    <i class="fas fa-box-archive"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div id="stat-total-orders" class="text-lg sm:text-xl font-black text-slate-900 leading-tight">0</div>
+                                <div class="text-[10px] text-slate-400 mt-1 truncate">All-time orders</div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Pending Orders -->
+                        <div class="bg-white p-4 rounded-3xl border border-slate-200 stat-card-shadow flex flex-col justify-between relative overflow-hidden">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[11px] font-extrabold text-slate-400">Pending Orders</span>
+                                <div class="w-7 h-7 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center text-xs">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div id="stat-pending-orders" class="text-lg sm:text-xl font-black text-amber-600 leading-tight">0</div>
+                                <div class="text-[10px] text-amber-600 font-bold mt-1 truncate">Awaiting confirmation</div>
+                            </div>
+                        </div>
+
+                        <!-- 4. Delivered Orders -->
+                        <div class="bg-white p-4 rounded-3xl border border-slate-200 stat-card-shadow flex flex-col justify-between relative overflow-hidden">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[11px] font-extrabold text-slate-400">Delivered Orders</span>
+                                <div class="w-7 h-7 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-xs">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div id="stat-delivered-orders" class="text-lg sm:text-xl font-black text-emerald-600 leading-tight">0</div>
+                                <div class="text-[10px] text-emerald-600 font-bold mt-1 truncate">Completed</div>
+                            </div>
+                        </div>
+
+                        <!-- 5. Total Customers -->
+                        <div class="bg-white p-4 rounded-3xl border border-slate-200 stat-card-shadow flex flex-col justify-between relative overflow-hidden">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[11px] font-extrabold text-slate-400">Customers</span>
+                                <div class="w-7 h-7 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center text-xs">
+                                    <i class="fas fa-user-group"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div id="stat-total-customers" class="text-lg sm:text-xl font-black text-slate-900 leading-tight">0</div>
+                                <div class="text-[10px] text-slate-400 mt-1 truncate">Customers with orders</div>
+                            </div>
+                        </div>
+
+                        <!-- 6. Total Products -->
+                        <div class="bg-white p-4 rounded-3xl border border-slate-200 stat-card-shadow flex flex-col justify-between relative overflow-hidden">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[11px] font-extrabold text-slate-400">Toys Catalog</span>
+                                <div class="w-7 h-7 rounded-xl bg-purple-50 text-purple-500 flex items-center justify-center text-xs">
+                                    <i class="fas fa-cube"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div id="stat-total-products" class="text-lg sm:text-xl font-black text-slate-900 leading-tight">12</div>
+                                <div class="text-[10px] text-slate-400 mt-1 truncate">Active toys in store</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- SECONDARY ALERT / STATUS COUNTER STRIP -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] uppercase font-bold text-slate-400 block">New Orders</span>
+                                <span class="text-[11px] text-amber-600 font-semibold">Awaiting action</span>
+                            </div>
+                            <span id="strip-new-orders" class="text-base font-black text-slate-900">0</span>
+                        </div>
+
+                        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] uppercase font-bold text-slate-400 block">Payment Slips</span>
+                                <span class="text-[11px] text-blue-600 font-semibold">Attached for verification</span>
+                            </div>
+                            <span id="strip-slips-awaiting" class="text-base font-black text-blue-600">0</span>
+                        </div>
+
+                        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] uppercase font-bold text-slate-400 block">Dispatched</span>
+                                <span class="text-[11px] text-purple-600 font-semibold">In transit via courier</span>
+                            </div>
+                            <span id="strip-dispatched" class="text-base font-black text-purple-600">0</span>
+                        </div>
+
+                        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] uppercase font-bold text-slate-400 block">Cancelled</span>
+                                <span class="text-[11px] text-slate-400 font-semibold">Orders rejected</span>
+                            </div>
+                            <span id="strip-cancelled" class="text-base font-black text-red-500">0</span>
+                        </div>
+                    </div>
+
+                    <!-- TWO MASTER ANALYTICS CARDS (EXACT MATCH TO REFERENCE) -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                        <!-- Left: Sales Overview Chart (2 Columns) -->
+                        <div class="lg:col-span-2 bg-white p-6 rounded-3xl border border-slate-200 stat-card-shadow flex flex-col justify-between">
+                            <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                                <div>
+                                    <h3 class="font-black text-slate-900 text-base">Sales Overview</h3>
+                                    <p class="text-xs text-slate-400 mt-0.5">Delivered & verified toy revenue by order date</p>
+                                </div>
+                                <span class="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-xl">
+                                    Last 7 Days
+                                </span>
+                            </div>
+
+                            <!-- Chart Canvas Container -->
+                            <div class="relative h-64 w-full">
+                                <canvas id="salesOverviewChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Right: Orders Overview Breakdown (1 Column) -->
+                        <div class="bg-white p-6 rounded-3xl border border-slate-200 stat-card-shadow flex flex-col justify-between">
+                            <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                                <div>
+                                    <h3 class="font-black text-slate-900 text-base">Orders Overview</h3>
+                                    <p class="text-xs text-slate-400 mt-0.5">Current order lifecycle breakdown</p>
+                                </div>
+                                <span class="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-xl">
+                                    All-Time
+                                </span>
+                            </div>
+
+                            <div class="flex items-baseline gap-2 mb-4">
+                                <span id="count-total-breakdown" class="text-3xl font-black text-slate-900">0</span>
+                                <span class="text-xs text-slate-400 font-bold">Total Orders</span>
+                            </div>
+
+                            <!-- Status Progress Bars -->
+                            <div class="space-y-3.5 mb-5 text-xs">
+                                <div>
+                                    <div class="flex justify-between font-bold text-slate-700 mb-1">
+                                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-400"></span> Pending</span>
+                                        <span id="count-pending" class="font-black">0</span>
+                                    </div>
+                                    <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                                        <div id="bar-pending" class="h-full bg-amber-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between font-bold text-slate-700 mb-1">
+                                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500"></span> Dispatched</span>
+                                        <span id="count-dispatched" class="font-black">0</span>
+                                    </div>
+                                    <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                                        <div id="bar-dispatched" class="h-full bg-blue-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between font-bold text-slate-700 mb-1">
+                                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Delivered</span>
+                                        <span id="count-delivered" class="font-black">0</span>
+                                    </div>
+                                    <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                                        <div id="bar-delivered" class="h-full bg-emerald-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between font-bold text-slate-700 mb-1">
+                                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500"></span> Cancelled</span>
+                                        <span id="count-cancelled" class="font-black">0</span>
+                                    </div>
+                                    <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                                        <div id="bar-cancelled" class="h-full bg-red-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mini Doughnut Chart -->
+                            <div class="relative h-28 w-full mt-2">
+                                <canvas id="ordersDoughnutChart"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- RECENT ORDERS QUICK TABLE -->
+                    <div class="bg-white rounded-3xl border border-slate-200 stat-card-shadow overflow-hidden">
+                        <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+                            <div>
+                                <h3 class="font-black text-slate-900 text-base">Recent Orders</h3>
+                                <p class="text-xs text-slate-400 mt-0.5">Latest customer toy purchases</p>
+                            </div>
+                            <button onclick="switchAdminTab('orders')" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-colors">
+                                View All Orders →
+                            </button>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-slate-50 border-b border-slate-200 text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">
+                                    <tr>
+                                        <th class="px-4 py-3">Order ID & Date</th>
+                                        <th class="px-4 py-3">Customer</th>
+                                        <th class="px-4 py-3">City & Address</th>
+                                        <th class="px-4 py-3">Ordered Items</th>
+                                        <th class="px-4 py-3">Total Payable</th>
+                                        <th class="px-4 py-3">Status</th>
+                                        <th class="px-4 py-3 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-orders-table-body">
+                                    <!-- Injected by js/admin.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- ==============================================
+                     VIEW 2: ANALYTICS TAB (MATCHING USER SCREENSHOT & PREMIER SPEC)
+                     ============================================== -->
+                <section id="view-analytics" class="hidden space-y-6">
+
+                    <!-- Top Header (Breadcrumb, Title, Live Status Badge & Refresh Button) -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">MEHAR TOYS / ANALYTICS</div>
+                            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 font-heading tracking-tight mt-0.5">Analytics</h2>
+                            <p class="text-xs text-slate-500 mt-1">Understand your sales and order performance with real-time velocity tracking.</p>
+                        </div>
+                        <div class="flex items-center gap-2.5 self-start sm:self-auto">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-xs">
+                                <span class="relative flex h-2 w-2">
+                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                </span>
+                                <span>Live Store Feed</span>
+                            </span>
+                            <button 
+                                type="button"
+                                onclick="renderAnalyticsTab();" 
+                                class="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold rounded-xl text-xs flex items-center gap-2 shadow-xs transition hover:border-slate-300">
+                                <i class="fas fa-rotate text-slate-500"></i>
+                                <span>Refresh</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Luxury Time Range Quick Selector Bar (8 Filters Requested by User) -->
+                    <div class="bg-white p-2 sm:p-2.5 rounded-2xl border border-slate-200/90 shadow-xs">
+                        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
+                            <div class="text-[11px] font-black uppercase text-slate-400 px-3 flex items-center gap-1.5 shrink-0">
+                                <i class="fas fa-filter text-slate-400"></i> Timeframe:
+                            </div>
+                            <div class="flex items-center gap-1 shrink-0" id="analytics-filter-pills">
+                                <button type="button" onclick="setAnalyticsPeriod('today')" data-period="today" class="analytics-pill px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-transparent hover:bg-slate-100 text-slate-600">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span> Daily Live (Today)
+                                </button>
+                                <button type="button" onclick="setAnalyticsPeriod('7days')" data-period="7days" class="analytics-pill px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-slate-900 text-white shadow-xs">
+                                    7 Days
+                                </button>
+                                <button type="button" onclick="setAnalyticsPeriod('15days')" data-period="15days" class="analytics-pill px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-transparent hover:bg-slate-100 text-slate-600">
+                                    15 Days
+                                </button>
+                                <button type="button" onclick="setAnalyticsPeriod('1month')" data-period="1month" class="analytics-pill px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-transparent hover:bg-slate-100 text-slate-600">
+                                    1 Month (30D)
+                                </button>
+                                <button type="button" onclick="setAnalyticsPeriod('3months')" data-period="3months" class="analytics-pill px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-transparent hover:bg-slate-100 text-slate-600">
+                                    3 Months
+                                </button>
+                                <button type="button" onclick="setAnalyticsPeriod('6months')" data-period="6months" class="analytics-pill px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-transparent hover:bg-slate-100 text-slate-600">
+                                    6 Months
+                                </button>
+                                <button type="button" onclick="setAnalyticsPeriod('1year')" data-period="1year" class="analytics-pill px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-transparent hover:bg-slate-100 text-slate-600">
+                                    1 Year
+                                </button>
+                                <button type="button" onclick="setAnalyticsPeriod('lifetime')" data-period="lifetime" class="analytics-pill px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-transparent hover:bg-slate-100 text-slate-600">
+                                    ♾️ Lifetime
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4 Top Metric Cards (Exact Match to User Screenshot) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        
+                        <!-- Card 1: Revenue -->
+                        <div class="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition">
+                            <div class="text-xs font-semibold text-slate-500">Revenue</div>
+                            <div id="analytics-top-revenue" class="text-2xl sm:text-3xl font-black text-slate-900 mt-2 font-heading tracking-tight">Rs. 0</div>
+                            <div id="analytics-top-revenue-sub" class="text-xs text-slate-400 mt-2">
+                                Delivered orders, including delivery
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Orders -->
+                        <div class="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition">
+                            <div class="text-xs font-semibold text-slate-500">Orders</div>
+                            <div id="analytics-top-orders" class="text-2xl sm:text-3xl font-black text-slate-900 mt-2 font-heading tracking-tight">0</div>
+                            <div id="analytics-top-orders-sub" class="text-xs text-slate-400 mt-2">
+                                All order statuses
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Customers -->
+                        <div class="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition">
+                            <div class="text-xs font-semibold text-slate-500">Customers</div>
+                            <div id="analytics-top-customers" class="text-2xl sm:text-3xl font-black text-slate-900 mt-2 font-heading tracking-tight">0</div>
+                            <div id="analytics-top-customers-sub" class="text-xs text-slate-400 mt-2">
+                                Customers with orders
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Products Sold -->
+                        <div class="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition">
+                            <div class="text-xs font-semibold text-slate-500">Products Sold</div>
+                            <div id="analytics-top-products" class="text-2xl sm:text-3xl font-black text-slate-900 mt-2 font-heading tracking-tight">0</div>
+                            <div id="analytics-top-products-sub" class="text-xs text-slate-400 mt-2">
+                                Units in delivered orders
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Master Two-Column Grid: Sales Overview (Left) & Orders Overview (Right) -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                        
+                        <!-- Left Column: Sales Overview (Exact match to screenshot) -->
+                        <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-slate-200/90 shadow-xs space-y-4">
+                            <!-- Header with Dropdown -->
+                            <div class="flex items-start justify-between gap-4">
+                                <div>
+                                    <h3 class="font-black text-slate-900 text-base font-heading">Sales Overview</h3>
+                                    <p class="text-xs text-slate-400 mt-0.5">Delivered revenue · by order date · Pakistan time</p>
+                                </div>
+                                <select 
+                                    id="analytics-sales-period-select" 
+                                    onchange="setAnalyticsPeriod(this.value)" 
+                                    class="bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-700 shadow-2xs hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 cursor-pointer">
+                                    <option value="today">Today (Live)</option>
+                                    <option value="7days" selected>7 Days</option>
+                                    <option value="15days">15 Days</option>
+                                    <option value="1month">1 Month</option>
+                                    <option value="3months">3 Months</option>
+                                    <option value="6months">6 Months</option>
+                                    <option value="1year">1 Year</option>
+                                    <option value="lifetime">Lifetime</option>
+                                </select>
+                            </div>
+
+                            <!-- Value & Interval -->
+                            <div class="pt-2">
+                                <div id="analytics-sales-overview-amount" class="text-3xl sm:text-4xl font-black text-slate-900 font-heading tracking-tight">Rs. 0</div>
+                                <div id="analytics-sales-overview-count" class="text-xs text-slate-500 mt-1">0 delivered orders in this period</div>
+                                <div id="analytics-sales-overview-interval" class="text-[11px] text-slate-400 font-mono mt-0.5">2026-09-27 → 2026-10-03 · day intervals</div>
+                            </div>
+
+                            <!-- Interactive Chart -->
+                            <div class="relative h-64 sm:h-72 w-full pt-2">
+                                <canvas id="analyticsSalesChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Orders Overview (Exact match to screenshot) -->
+                        <div class="lg:col-span-5 bg-white p-6 rounded-3xl border border-slate-200/90 shadow-xs space-y-4">
+                            <!-- Header with Dropdown -->
+                            <div class="flex items-start justify-between gap-4">
+                                <div>
+                                    <h3 class="font-black text-slate-900 text-base font-heading">Orders Overview</h3>
+                                    <p id="analytics-orders-overview-subtitle" class="text-xs text-slate-400 mt-0.5">7 Days · by order date · current status</p>
+                                </div>
+                                <select 
+                                    id="analytics-orders-period-select" 
+                                    onchange="setAnalyticsPeriod(this.value)" 
+                                    class="bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-700 shadow-2xs hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 cursor-pointer">
+                                    <option value="today">Today (Live)</option>
+                                    <option value="7days" selected>7 Days</option>
+                                    <option value="15days">15 Days</option>
+                                    <option value="1month">1 Month</option>
+                                    <option value="3months">3 Months</option>
+                                    <option value="6months">6 Months</option>
+                                    <option value="1year">1 Year</option>
+                                    <option value="lifetime">Lifetime</option>
+                                </select>
+                            </div>
+
+                            <!-- Total Orders count -->
+                            <div class="pt-2 flex items-baseline gap-2">
+                                <span id="analytics-orders-overview-total" class="text-3xl sm:text-4xl font-black text-slate-900 font-heading tracking-tight">0</span>
+                                <span class="text-xs font-bold text-slate-400">Total orders</span>
+                            </div>
+
+                            <!-- 5 Status Breakdown Bars (Pending, Confirmed, Shipped, Delivered, Cancelled) -->
+                            <div class="space-y-4 pt-3">
+                                
+                                <!-- 1. Pending (Amber) -->
+                                <div>
+                                    <div class="flex items-center justify-between text-xs font-bold pb-1.5">
+                                        <div class="flex items-center gap-2 text-slate-700">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                                            <span>Pending</span>
+                                        </div>
+                                        <span id="stat-count-pending" class="text-slate-900 font-black">0</span>
+                                    </div>
+                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                        <div id="stat-bar-pending" class="bg-amber-500 h-1.5 rounded-full transition-all duration-500" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+
+                                <!-- 2. Confirmed (Blue) -->
+                                <div>
+                                    <div class="flex items-center justify-between text-xs font-bold pb-1.5">
+                                        <div class="flex items-center gap-2 text-slate-700">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                                            <span>Confirmed</span>
+                                        </div>
+                                        <span id="stat-count-confirmed" class="text-slate-900 font-black">0</span>
+                                    </div>
+                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                        <div id="stat-bar-confirmed" class="bg-blue-600 h-1.5 rounded-full transition-all duration-500" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+
+                                <!-- 3. Shipped (Purple) -->
+                                <div>
+                                    <div class="flex items-center justify-between text-xs font-bold pb-1.5">
+                                        <div class="flex items-center gap-2 text-slate-700">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-purple-600"></span>
+                                            <span>Shipped</span>
+                                        </div>
+                                        <span id="stat-count-shipped" class="text-slate-900 font-black">0</span>
+                                    </div>
+                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                        <div id="stat-bar-shipped" class="bg-purple-600 h-1.5 rounded-full transition-all duration-500" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+
+                                <!-- 4. Delivered (Green) -->
+                                <div>
+                                    <div class="flex items-center justify-between text-xs font-bold pb-1.5">
+                                        <div class="flex items-center gap-2 text-slate-700">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                                            <span>Delivered</span>
+                                        </div>
+                                        <span id="stat-count-delivered" class="text-slate-900 font-black">0</span>
+                                    </div>
+                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                        <div id="stat-bar-delivered" class="bg-emerald-600 h-1.5 rounded-full transition-all duration-500" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+
+                                <!-- 5. Cancelled (Red) -->
+                                <div>
+                                    <div class="flex items-center justify-between text-xs font-bold pb-1.5">
+                                        <div class="flex items-center gap-2 text-slate-700">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                                            <span>Cancelled</span>
+                                        </div>
+                                        <span id="stat-count-cancelled" class="text-slate-900 font-black">0</span>
+                                    </div>
+                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                        <div id="stat-bar-cancelled" class="bg-red-500 h-1.5 rounded-full transition-all duration-500" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Daily Live Product & Real-Time Sales Velocity Widget -->
+                    <div class="bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-3">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="relative flex h-3 w-3">
+                                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                                      <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
+                                    </span>
+                                    <h3 class="font-black text-slate-900 text-base font-heading">Daily Live Product & Sales Velocity</h3>
+                                    <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-rose-50 text-rose-600 border border-rose-200 tracking-wider">Fast-Moving Toys</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-1">Real-time product demand, units moving, and revenue generation in the selected timeframe.</p>
+                            </div>
+                            <div class="flex items-center gap-2 text-xs font-bold text-slate-600 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 self-start sm:self-auto">
+                                <i class="fas fa-bolt text-amber-500"></i>
+                                <span id="analytics-live-period-text">Active Filter: 7 Days</span>
+                            </div>
+                        </div>
+
+                        <!-- Live Products Table -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="border-b border-slate-100 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                                        <th class="py-3 px-3"># Rank</th>
+                                        <th class="py-3 px-3">Toy Product</th>
+                                        <th class="py-3 px-3">Category</th>
+                                        <th class="py-3 px-3 text-center">Units Sold</th>
+                                        <th class="py-3 px-3 text-center">Stock Left</th>
+                                        <th class="py-3 px-3 text-right">Revenue Generated</th>
+                                        <th class="py-3 px-3 text-center">Sales Velocity</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="analytics-live-products-tbody" class="divide-y border-slate-100">
+                                    <!-- Rendered dynamically via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- ==============================================
+                     VIEW 3: REPORTS TAB (EXACT MATCH TO USER SCREENSHOT)
+                     ============================================== -->
+                <section id="view-reports" class="hidden space-y-6">
+
+                    <!-- Top Header -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 font-heading">Reports</h2>
+                            <p class="text-xs text-slate-500 mt-0.5">Generate and download reports from your store records.</p>
+                        </div>
+                        <button 
+                            type="button"
+                            onclick="renderReportsTab(); alert('Reports refreshed with live store records! 🔄');" 
+                            class="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold rounded-xl text-xs flex items-center gap-2 shadow-sm self-start sm:self-auto transition-all">
+                            <i class="fas fa-rotate text-slate-500"></i>
+                            <span>Refresh</span>
+                        </button>
+                    </div>
+
+                    <!-- Live Status Banner (from screenshot) -->
+                    <div class="bg-amber-50 border border-amber-200/80 rounded-2xl px-4 py-3 flex items-center gap-3 text-xs text-amber-900 font-medium">
+                        <i class="fas fa-circle-info text-amber-500"></i>
+                        <span>Live updates are active. Use Refresh to retry or reload anytime.</span>
+                    </div>
+
+                    <!-- Choose Your Report Box (from screenshot) -->
+                    <div class="bg-white rounded-3xl border border-slate-200 p-6 stat-card-shadow space-y-5">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                            <div>
+                                <h3 class="font-black text-slate-900 text-base font-heading">Choose your report</h3>
+                                <p class="text-xs text-slate-400 mt-0.5">A clear view of your store, backed by your actual records.</p>
+                            </div>
+                            <span class="text-[11px] font-bold text-slate-500 bg-slate-50 px-3 py-1 rounded-full border border-slate-200">
+                                CSV exports
+                            </span>
+                        </div>
+
+                        <!-- 5 Report Selection Cards Grid (from screenshot) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                            
+                            <!-- 1. Sales Report -->
+                            <button 
+                                type="button" 
+                                onclick="selectReportType('sales')" 
+                                id="report-card-sales" 
+                                class="report-selector-card text-left p-4 rounded-2xl border border-slate-200 hover:border-slate-300 hover:bg-slate-50/50 flex items-center justify-between transition-all group">
+                                <div class="flex items-center gap-3.5">
+                                    <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-sm border border-amber-100">
+                                        <i class="fas fa-arrow-trend-up"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-extrabold text-slate-900 text-xs sm:text-sm">Sales Report</div>
+                                        <div class="text-[11px] text-slate-400">Delivered revenue and discounts</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-arrow-right text-xs text-slate-300 group-hover:text-slate-600 transition-colors"></i>
+                            </button>
+
+                            <!-- 2. Orders Report -->
+                            <button 
+                                type="button" 
+                                onclick="selectReportType('orders')" 
+                                id="report-card-orders" 
+                                class="report-selector-card text-left p-4 rounded-2xl border border-slate-200 hover:border-slate-300 hover:bg-slate-50/50 flex items-center justify-between transition-all group">
+                                <div class="flex items-center gap-3.5">
+                                    <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center text-sm border border-orange-100">
+                                        <i class="fas fa-box-archive"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-extrabold text-slate-900 text-xs sm:text-sm">Orders Report</div>
+                                        <div class="text-[11px] text-slate-400">Order details across every status</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-arrow-right text-xs text-slate-300 group-hover:text-slate-600 transition-colors"></i>
+                            </button>
+
+                            <!-- 3. Products Report (Default active in screenshot) -->
+                            <button 
+                                type="button" 
+                                onclick="selectReportType('products')" 
+                                id="report-card-products" 
+                                class="report-selector-card text-left p-4 rounded-2xl border-2 border-red-500 bg-red-50/20 flex items-center justify-between transition-all group">
+                                <div class="flex items-center gap-3.5">
+                                    <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-sm border border-rose-100">
+                                        <i class="fas fa-cube"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-extrabold text-slate-900 text-xs sm:text-sm">Products Report</div>
+                                        <div class="text-[11px] text-slate-400">Catalog and delivered performance</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-arrow-right text-xs text-red-500 transition-colors"></i>
+                            </button>
+
+                            <!-- 4. Inventory Report -->
+                            <button 
+                                type="button" 
+                                onclick="selectReportType('inventory')" 
+                                id="report-card-inventory" 
+                                class="report-selector-card text-left p-4 rounded-2xl border border-slate-200 hover:border-slate-300 hover:bg-slate-50/50 flex items-center justify-between transition-all group">
+                                <div class="flex items-center gap-3.5">
+                                    <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-sm border border-teal-100">
+                                        <i class="fas fa-boxes-stacked"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-extrabold text-slate-900 text-xs sm:text-sm">Inventory Report</div>
+                                        <div class="text-[11px] text-slate-400">Current stock snapshot</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-arrow-right text-xs text-slate-300 group-hover:text-slate-600 transition-colors"></i>
+                            </button>
+
+                            <!-- 5. Customers Report -->
+                            <button 
+                                type="button" 
+                                onclick="selectReportType('customers')" 
+                                id="report-card-customers" 
+                                class="report-selector-card text-left p-4 rounded-2xl border border-slate-200 hover:border-slate-300 hover:bg-slate-50/50 flex items-center justify-between transition-all group">
+                                <div class="flex items-center gap-3.5">
+                                    <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-sm border border-purple-100">
+                                        <i class="fas fa-user-group"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-extrabold text-slate-900 text-xs sm:text-sm">Customers Report</div>
+                                        <div class="text-[11px] text-slate-400">Customer orders and spending</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-arrow-right text-xs text-slate-300 group-hover:text-slate-600 transition-colors"></i>
+                            </button>
+
+                        </div>
+                    </div>
+
+                    <!-- Generate Report Controls Card (from screenshot) -->
+                    <div class="bg-white rounded-3xl border border-slate-200 p-6 stat-card-shadow space-y-5">
+                        <h3 id="report-generate-title" class="font-black text-slate-900 text-base font-heading">
+                            Generate products report
+                        </h3>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">From Date</label>
+                                <input 
+                                    type="date" 
+                                    id="report-date-from" 
+                                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-red-500 outline-none text-xs font-semibold text-slate-800 bg-white"
+                                />
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">To Date</label>
+                                <input 
+                                    type="date" 
+                                    id="report-date-to" 
+                                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-red-500 outline-none text-xs font-semibold text-slate-800 bg-white"
+                                />
+                            </div>
+                        </div>
+
+                        <p class="text-[11px] text-slate-400">
+                            Dates include the full day in Pakistan time. Leave dates blank for all available orders.
+                        </p>
+
+                        <!-- Big Red Generate Report Button -->
+                        <button 
+                            type="button" 
+                            onclick="executeGenerateReport()" 
+                            class="w-full py-3.5 bg-red-600 hover:bg-red-700 active:scale-98 text-white font-extrabold rounded-2xl shadow-md text-sm flex items-center justify-center gap-2 transition-all">
+                            <span>Generate Report</span>
+                            <i class="fas fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+
+                    <!-- Report Output Results (Rendered automatically or upon click) -->
+                    <div id="report-output-container" class="bg-white rounded-3xl border border-slate-200 stat-card-shadow overflow-hidden">
+                        <!-- Injected dynamically by js/admin.js -->
+                    </div>
+
+                </section>
+
+                <!-- ==============================================
+                     VIEW 4: PRODUCTS CATALOG MANAGEMENT
+                     ============================================== -->
+                <section id="view-products" class="hidden space-y-4">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-5 rounded-3xl border border-slate-200 stat-card-shadow">
+                        <div>
+                            <h3 class="font-black text-slate-900 text-base">Toys Product Catalog</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">Manage toys, update prices, or add brand new toy items to your store.</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="resetProductsToDefault()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition-colors">
+                                <i class="fas fa-rotate-left"></i>
+                                <span>Reset Default Toys</span>
+                            </button>
+                            <button onclick="openAddProductModal()" class="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs flex items-center gap-2 shadow-md transition-all active:scale-95">
+                                <i class="fas fa-plus"></i>
+                                <span>+ Add New Toy</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Products Grid -->
+                    <div id="products-manager-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <!-- Injected by js/admin.js -->
+                    </div>
+                </section>
+
+                <!-- ==============================================
+                     VIEW 5: INVENTORY & STOCK MANAGEMENT
+                     ============================================== -->
+                <section id="view-inventory" class="hidden space-y-4">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-5 rounded-3xl border border-slate-200 stat-card-shadow">
+                        <div>
+                            <h3 class="font-black text-slate-900 text-base">Toy Stock & Inventory Tracker</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">Manage warehouse stock units, mark items in/out of stock with 1-click controls.</p>
+                        </div>
+                        <span class="text-xs font-bold text-teal-700 bg-teal-50 px-3 py-1.5 rounded-xl border border-teal-200">
+                            Live Stock Control
+                        </span>
+                    </div>
+
+                    <div class="bg-white rounded-3xl border border-slate-200 stat-card-shadow overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-slate-50 border-b border-slate-200 text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">
+                                    <tr>
+                                        <th class="px-4 py-3.5">Toy Product</th>
+                                        <th class="px-4 py-3.5">Price</th>
+                                        <th class="px-4 py-3.5">Stock Level</th>
+                                        <th class="px-4 py-3.5">Stock Badge</th>
+                                        <th class="px-4 py-3.5 text-right">Quick Stock (+ / -)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventory-table-body">
+                                    <!-- Injected by js/admin.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==============================================
+                     VIEW 6: ORDERS MANAGEMENT TAB
+                     ============================================== -->
+                <section id="view-orders" class="hidden space-y-4">
+                    <div class="bg-white rounded-3xl border border-slate-200 stat-card-shadow overflow-hidden">
+                        
+                        <!-- Search & Status Filter Controls -->
+                        <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-50/50">
+                            <div class="relative w-full sm:w-80">
+                                <input 
+                                    type="text" 
+                                    id="order-search" 
+                                    placeholder="Search by ID, Customer Name, Phone, City..." 
+                                    class="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white border border-slate-200 focus:border-red-500 outline-none text-xs"
+                                />
+                                <i class="fas fa-search absolute left-3 top-3.5 text-slate-400 text-xs"></i>
+                            </div>
+
+                            <div class="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+                                <label class="text-xs font-bold text-slate-600">Filter Status:</label>
+                                <select 
+                                    id="order-status-filter" 
+                                    class="bg-white border border-slate-200 text-xs rounded-xl p-2.5 font-bold outline-none shadow-sm cursor-pointer">
+                                    <option value="all">Tamam Orders (All)</option>
+                                    <option value="Pending">🟡 Pending (New)</option>
+                                    <option value="Dispatched">🚚 Dispatched (In Transit)</option>
+                                    <option value="Delivered">🟢 Delivered (Completed)</option>
+                                    <option value="Cancelled">🔴 Cancelled</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Orders Table -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-slate-50 border-b border-slate-200 text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">
+                                    <tr>
+                                        <th class="px-4 py-3.5">Order ID & Date</th>
+                                        <th class="px-4 py-3.5">Customer Name & Phone</th>
+                                        <th class="px-4 py-3.5">City & Delivery Address</th>
+                                        <th class="px-4 py-3.5">Purchased Toys</th>
+                                        <th class="px-4 py-3.5">Payment & Bill</th>
+                                        <th class="px-4 py-3.5">Order Status</th>
+                                        <th class="px-4 py-3.5 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orders-table-body">
+                                    <!-- Injected by js/admin.js -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Empty Orders Notice -->
+                        <div id="empty-orders-view" class="text-center py-16 px-4">
+                            <div class="text-5xl mb-3">📦</div>
+                            <h3 class="text-base font-bold text-slate-800">Abhi tak koi order nahi mila!</h3>
+                            <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+                                Jaise hi koi customer website par order place karega, order foran is list mein show ho jayega.
+                            </p>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- ==============================================
+                     VIEW 7: CATEGORIES TAB
+                     ============================================== -->
+                <section id="view-categories" class="hidden space-y-4">
+                    <div class="bg-white p-5 rounded-3xl border border-slate-200 stat-card-shadow flex items-center justify-between">
+                        <div>
+                            <h3 class="font-black text-slate-900 text-base">Toy Categories & Classification</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">All active store categories with dynamic toy count mapping.</p>
+                        </div>
+                        <span class="text-xs font-bold text-violet-700 bg-violet-50 px-3 py-1.5 rounded-xl border border-violet-200">
+                            Organized Catalog
+                        </span>
+                    </div>
+
+                    <div class="bg-white rounded-3xl border border-slate-200 stat-card-shadow overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-slate-50 border-b border-slate-200 text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">
+                                    <tr>
+                                        <th class="px-4 py-3.5">Category Name</th>
+                                        <th class="px-4 py-3.5">Slug ID</th>
+                                        <th class="px-4 py-3.5">Available Toys</th>
+                                        <th class="px-4 py-3.5">Display Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="categories-table-body">
+                                    <!-- Injected by js/admin.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==============================================
+                     VIEW 8: CUSTOMERS & LOGIN/SIGNUP HUB
+                     ============================================== -->
+                <section id="view-customers" class="hidden space-y-6">
+
+                    <!-- Top Header -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">MEHAR TOYS / CUSTOMERS & ACCOUNTS</div>
+                            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 font-heading tracking-tight mt-0.5">Customer Accounts & Login Hub</h2>
+                            <p class="text-xs text-slate-500 mt-1">Track registered customer logins, signup dates, credentials, active sessions & order histories.</p>
+                        </div>
+                        <div class="flex items-center gap-2.5 self-start sm:self-auto flex-wrap">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-xs">
+                                <span class="relative flex h-2 w-2">
+                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                </span>
+                                <span>Auth Sync Active</span>
+                            </span>
+                            <button 
+                                type="button"
+                                onclick="renderCustomersList()" 
+                                class="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold rounded-xl text-xs flex items-center gap-2 shadow-xs transition hover:border-slate-300">
+                                <i class="fas fa-rotate text-slate-500"></i>
+                                <span>Refresh</span>
+                            </button>
+                            <button 
+                                type="button"
+                                onclick="exportCustomersCSV()" 
+                                class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center gap-2 shadow-xs transition active:scale-98">
+                                <i class="fas fa-file-csv"></i>
+                                <span>Export CSV</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 4 Customer Metric Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        
+                        <!-- Card 1: Registered Accounts (Signups) -->
+                        <div class="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition">
+                            <div class="flex items-center justify-between">
+                                <div class="text-xs font-semibold text-slate-500">Registered Accounts (Signups)</div>
+                                <span class="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xs border border-purple-100"><i class="fas fa-user-check"></i></span>
+                            </div>
+                            <div id="cust-stat-registered" class="text-2xl sm:text-3xl font-black text-slate-900 mt-2 font-heading tracking-tight">0</div>
+                            <div class="text-xs text-slate-400 mt-2 flex items-center gap-1.5">
+                                <span class="text-purple-600 font-bold">🔐 Full Auth Access</span> · with password
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Recent Logins (Active) -->
+                        <div class="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition">
+                            <div class="flex items-center justify-between">
+                                <div class="text-xs font-semibold text-slate-500">Recent Logins (Active)</div>
+                                <span class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs border border-emerald-100"><i class="fas fa-right-to-bracket"></i></span>
+                            </div>
+                            <div id="cust-stat-active-logins" class="text-2xl sm:text-3xl font-black text-slate-900 mt-2 font-heading tracking-tight">0</div>
+                            <div class="text-xs text-slate-400 mt-2 flex items-center gap-1.5">
+                                <span class="text-emerald-600 font-bold">🟢 Active Sessions</span> · logged in recently
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Direct Order Buyers -->
+                        <div class="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition">
+                            <div class="flex items-center justify-between">
+                                <div class="text-xs font-semibold text-slate-500">Shoppers with Orders</div>
+                                <span class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xs border border-blue-100"><i class="fas fa-bag-shopping"></i></span>
+                            </div>
+                            <div id="cust-stat-buyers" class="text-2xl sm:text-3xl font-black text-slate-900 mt-2 font-heading tracking-tight">0</div>
+                            <div class="text-xs text-slate-400 mt-2 flex items-center gap-1.5">
+                                <span class="text-blue-600 font-bold">🛍️ Converted</span> · placed store orders
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Total Customer Spend -->
+                        <div class="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition">
+                            <div class="flex items-center justify-between">
+                                <div class="text-xs font-semibold text-slate-500">Total Customer Spend</div>
+                                <span class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xs border border-amber-100"><i class="fas fa-wallet"></i></span>
+                            </div>
+                            <div id="cust-stat-revenue" class="text-2xl sm:text-3xl font-black text-slate-900 mt-2 font-heading tracking-tight">Rs. 0</div>
+                            <div class="text-xs text-slate-400 mt-2 flex items-center gap-1.5">
+                                <span class="text-emerald-600 font-bold">💰 Lifetime Turnover</span> · store sales
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Search, City Filter & Segmented Tabs Bar -->
+                    <div class="bg-white p-4 rounded-3xl border border-slate-200/90 shadow-xs space-y-3">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                            
+                            <!-- Filter Pill Buttons -->
+                            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 md:pb-0" id="customer-filter-pills">
+                                <button type="button" onclick="setCustomerFilter('all')" data-cust-filter="all" class="cust-filter-pill px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-slate-900 text-white shadow-xs">
+                                    All Profiles (<span id="count-pill-all">0</span>)
+                                </button>
+                                <button type="button" onclick="setCustomerFilter('registered')" data-cust-filter="registered" class="cust-filter-pill px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-transparent hover:bg-slate-100 text-slate-600">
+                                    🔐 Registered Signups (<span id="count-pill-registered">0</span>)
+                                </button>
+                                <button type="button" onclick="setCustomerFilter('recent')" data-cust-filter="recent" class="cust-filter-pill px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-transparent hover:bg-slate-100 text-slate-600">
+                                    ⚡ Active / Recent Logins (<span id="count-pill-recent">0</span>)
+                                </button>
+                                <button type="button" onclick="setCustomerFilter('guests')" data-cust-filter="guests" class="cust-filter-pill px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-transparent hover:bg-slate-100 text-slate-600">
+                                    🛍️ Guest Buyers (<span id="count-pill-guests">0</span>)
+                                </button>
+                            </div>
+
+                            <!-- Search Input & City Filter -->
+                            <div class="flex items-center gap-2 shrink-0">
+                                <div class="relative w-full sm:w-64">
+                                    <i class="fas fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                    <input 
+                                        type="text" 
+                                        id="customer-search-input" 
+                                        oninput="handleCustomerSearch(this.value)" 
+                                        placeholder="Search by name, phone, city..." 
+                                        class="w-full pl-9 pr-3.5 py-2 bg-slate-50 border border-slate-200 focus:border-slate-400 rounded-xl text-xs outline-none font-medium text-slate-700 transition"
+                                    />
+                                </div>
+                                <select 
+                                    id="customer-city-filter" 
+                                    onchange="handleCustomerCityFilter(this.value)" 
+                                    class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 shadow-2xs hover:border-slate-300 focus:outline-none cursor-pointer">
+                                    <option value="all">All Cities</option>
+                                    <option value="Lahore">Lahore</option>
+                                    <option value="Karachi">Karachi</option>
+                                    <option value="Islamabad">Islamabad</option>
+                                    <option value="Rawalpindi">Rawalpindi</option>
+                                    <option value="Faisalabad">Faisalabad</option>
+                                    <option value="Multan">Multan</option>
+                                    <option value="Peshawar">Peshawar</option>
+                                    <option value="Gujranwala">Gujranwala</option>
+                                    <option value="Sialkot">Sialkot</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Customers Accounts Table -->
+                    <div class="bg-white rounded-3xl border border-slate-200/90 shadow-xs overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead class="bg-slate-50 border-b border-slate-200/80 text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">
+                                    <tr>
+                                        <th class="px-4 py-3.5">Customer & Account</th>
+                                        <th class="px-4 py-3.5">Login Mobile</th>
+                                        <th class="px-4 py-3.5">Password (Credentials)</th>
+                                        <th class="px-4 py-3.5">Registration (Signup)</th>
+                                        <th class="px-4 py-3.5">Last Login Activity</th>
+                                        <th class="px-4 py-3.5">Location & Address</th>
+                                        <th class="px-4 py-3.5 text-center">Orders & Spend</th>
+                                        <th class="px-4 py-3.5 text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customers-table-body" class="divide-y divide-slate-100">
+                                    <!-- Injected dynamically by js/admin.js -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Empty State -->
+                        <div id="empty-customers-view" class="hidden text-center py-16 px-4">
+                            <div class="w-14 h-14 mx-auto rounded-2xl bg-purple-50 text-purple-500 flex items-center justify-center text-2xl mb-3 border border-purple-100">
+                                <i class="fas fa-users-slash"></i>
+                            </div>
+                            <h4 class="text-sm font-bold text-slate-800">No customer records found</h4>
+                            <p class="text-xs text-slate-400 mt-1">Try adjusting your search query or filter selection.</p>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- ==============================================
+                     VIEW 9: REVIEWS TAB
+                     ============================================== -->
+                <section id="view-reviews" class="hidden space-y-4">
+                    <div class="bg-white p-5 rounded-3xl border border-slate-200 stat-card-shadow flex items-center justify-between">
+                        <div>
+                            <h3 class="font-black text-slate-900 text-base">Customer Feedback & Reviews</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">Product ratings and comments left by happy parents and children.</p>
+                        </div>
+                        <span class="text-xs font-bold text-amber-700 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200">
+                            ★ 4.9 Average Rating
+                        </span>
+                    </div>
+
+                    <div class="bg-white rounded-3xl border border-slate-200 stat-card-shadow overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-slate-50 border-b border-slate-200 text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">
+                                    <tr>
+                                        <th class="px-4 py-3.5">Customer</th>
+                                        <th class="px-4 py-3.5">Toy Item</th>
+                                        <th class="px-4 py-3.5">Rating</th>
+                                        <th class="px-4 py-3.5">Feedback Comment</th>
+                                        <th class="px-4 py-3.5">Date</th>
+                                        <th class="px-4 py-3.5 text-right">Visibility</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reviews-table-body">
+                                    <!-- Injected by js/admin.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==============================================
+                     VIEW 10: MESSAGES TAB
+                     ============================================== -->
+                <section id="view-messages" class="hidden space-y-4">
+                    <div class="bg-white p-5 rounded-3xl border border-slate-200 stat-card-shadow flex items-center justify-between">
+                        <div>
+                            <h3 class="font-black text-slate-900 text-base">Customer Inquiries & Messages</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">Direct questions sent by shoppers with instant WhatsApp & Call response shortcuts.</p>
+                        </div>
+                        <span class="text-xs font-bold text-rose-700 bg-rose-50 px-3 py-1.5 rounded-xl border border-rose-200">
+                            Direct Support Inbox
+                        </span>
+                    </div>
+
+                    <div id="messages-list-container" class="space-y-3">
+                        <!-- Injected by js/admin.js -->
+                    </div>
+                </section>
+
+                <!-- ==============================================
+                     VIEW 11: COUPONS TAB
+                     ============================================== -->
+                <section id="view-coupons" class="hidden space-y-6">
+                    <!-- Create Coupon Card -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200 stat-card-shadow">
+                        <h3 class="font-black text-slate-900 text-base mb-1">Create New Discount Coupon</h3>
+                        <p class="text-xs text-slate-400 mb-4">Generate promo codes for special sale events (Eid, Birthdays, Weekend flash sale).</p>
+
+                        <form onsubmit="handleAddCoupon(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Coupon Code *</label>
+                                <input type="text" id="new-coupon-code" required placeholder="e.g. MEHAR10" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 uppercase font-mono font-bold text-xs outline-none focus:border-red-500" />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Discount % *</label>
+                                <input type="number" id="new-coupon-discount" required min="1" max="90" placeholder="e.g. 10" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-bold text-xs outline-none focus:border-red-500" />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Min Spend (Rs.)</label>
+                                <input type="number" id="new-coupon-min" placeholder="e.g. 1000" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-bold text-xs outline-none focus:border-red-500" />
+                            </div>
+                            <div class="flex items-end">
+                                <button type="submit" class="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white font-extrabold rounded-xl text-xs shadow-md transition-all">
+                                    + Add Promo Code
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Active Coupons Table -->
+                    <div class="bg-white rounded-3xl border border-slate-200 stat-card-shadow overflow-hidden">
+                        <div class="p-5 border-b border-slate-100">
+                            <h4 class="font-black text-slate-900 text-base">Active Store Coupons</h4>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-slate-50 border-b border-slate-200 text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">
+                                    <tr>
+                                        <th class="px-4 py-3.5">Code</th>
+                                        <th class="px-4 py-3.5">Discount Offer</th>
+                                        <th class="px-4 py-3.5">Minimum Spend</th>
+                                        <th class="px-4 py-3.5">Times Redeemed</th>
+                                        <th class="px-4 py-3.5">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="coupons-table-body">
+                                    <!-- Injected by js/admin.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==============================================
+                     VIEW 12: NOTIFICATIONS TAB
+                     ============================================== -->
+                <section id="view-notifications" class="hidden space-y-4">
+                    <div class="bg-white p-5 rounded-3xl border border-slate-200 stat-card-shadow flex items-center justify-between">
+                        <div>
+                            <h3 class="font-black text-slate-900 text-base">Live Activity & Notifications Feed</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">Real-time alerts for newly placed orders and delivery status updates.</p>
+                        </div>
+                        <button onclick="renderNotificationsTab()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs flex items-center gap-1.5 transition-colors">
+                            <i class="fas fa-rotate text-red-500"></i> Refresh Feed
+                        </button>
+                    </div>
+
+                    <div id="notifications-feed" class="space-y-3">
+                        <!-- Injected by js/admin.js -->
+                    </div>
+                </section>
+
+                <!-- ==============================================
+                     VIEW 13: STORE SETTINGS TAB
+                     ============================================== -->
+                <section id="view-settings" class="hidden">
+                    <div class="bg-white rounded-3xl border border-slate-200 stat-card-shadow p-6 sm:p-8 max-w-2xl mx-auto">
+                        <div class="mb-6 pb-4 border-b border-slate-100">
+                            <h3 class="text-xl font-black text-slate-900 font-heading">Store Configuration & Delivery Rules</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">Apni shop ka naam, helpline phone, delivery fees, aur Easypaisa/JazzCash details yahan se change karein.</p>
+                        </div>
+
+                        <form onsubmit="handleSaveSettings(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Store Name</label>
+                                <input type="text" id="cfg-store-name" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-red-500 outline-none text-xs" />
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Tagline</label>
+                                <input type="text" id="cfg-tagline" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-red-500 outline-none text-xs" />
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Helpline Phone Number</label>
+                                    <input type="text" id="cfg-phone" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-red-500 outline-none text-xs" />
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Support Email</label>
+                                    <input type="email" id="cfg-email" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-red-500 outline-none text-xs" />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Physical Store / Return Address</label>
+                                <input type="text" id="cfg-address" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-red-500 outline-none text-xs" />
+                            </div>
+
+                            <!-- Payment Accounts Box -->
+                            <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-3">
+                                <span class="text-xs font-extrabold text-emerald-900 block">Easypaisa & JazzCash Account Details:</span>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-800 mb-1">Account Title (Naam)</label>
+                                        <input type="text" id="cfg-account-title" required class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:border-emerald-600 outline-none text-xs font-bold bg-white" />
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-800 mb-1">Account Number (Phone)</label>
+                                        <input type="text" id="cfg-account-number" required class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:border-emerald-600 outline-none text-xs font-bold bg-white" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Delivery Fees Box -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 bg-amber-50 rounded-2xl border border-amber-200">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-800 mb-1">Free Delivery On Orders Above (Rs.)</label>
+                                    <input type="number" id="cfg-free-shipping" required class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:border-red-500 outline-none text-xs font-bold bg-white" />
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-800 mb-1">Standard Delivery Fee (Rs.)</label>
+                                    <input type="number" id="cfg-shipping-charge" required class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:border-red-500 outline-none text-xs font-bold bg-white" />
+                                </div>
+                            </div>
+
+                            <div class="pt-2">
+                                <button type="submit" class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white font-extrabold rounded-2xl shadow-md text-xs active:scale-98 transition-all">
+                                    Save All Store Settings
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- SUPABASE CLOUD DATABASE CONNECTION CARD -->
+                        <div class="mt-8 pt-6 border-t border-slate-200/80">
+                            <div class="flex items-center justify-between flex-wrap gap-3 pb-4 mb-4 border-b border-slate-100">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-lg shadow-sm">
+                                        <i class="fas fa-database"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-base font-black text-slate-900 font-heading flex items-center gap-2">
+                                            <span>Supabase Cloud Database Connection</span>
+                                            <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">PostgreSQL</span>
+                                        </h3>
+                                        <p class="text-xs text-slate-400">Live multi-device database sync, realtime notifications & cloud storage</p>
+                                    </div>
+                                </div>
+                                <div id="supabase-status-badge" class="px-3 py-1.5 rounded-full text-xs font-black bg-slate-100 text-slate-600 flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+                                    <span id="supabase-status-text">Offline (LocalStorage)</span>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4 text-xs">
+                                <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-4 text-slate-800 space-y-3">
+                                    <div class="flex items-center justify-between flex-wrap gap-2">
+                                        <div class="font-black text-xs text-emerald-950 flex items-center gap-2">
+                                            <span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-black shadow-xs">✓</span>
+                                            <span>Supabase Cloud Project Connected! Aakhri Step: Tables Create Karein</span>
+                                        </div>
+                                        <a href="https://supabase.com/dashboard/project/psvnweyfwyaqnjcsrnko/sql/new" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-extrabold text-xs flex items-center gap-1.5 shadow-sm transition">
+                                            <i class="fas fa-external-link-alt"></i>
+                                            <span>Supabase SQL Editor Kholein</span>
+                                        </a>
+                                    </div>
+                                    <p class="text-[11px] text-slate-600 leading-relaxed">
+                                        Neeche diye gaye <strong>"Copy Database SQL Code"</strong> button par click karein, phir Supabase SQL Editor me paste karke green <strong>"RUN"</strong> button dabayein! Is se Orders aur Products ki live real-time tables tayar ho jayengi.
+                                    </p>
+                                    <div class="flex items-center flex-wrap gap-2 pt-1">
+                                        <button type="button" id="copy-sql-btn" onclick="copySupabaseSQL()" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white font-extrabold rounded-xl text-xs flex items-center gap-2 transition active:scale-95 shadow-sm">
+                                            <i class="fas fa-copy"></i>
+                                            <span>Copy Database SQL Code</span>
+                                        </button>
+                                        <span class="text-[11px] text-slate-400">Ya folder se <code>supabase-schema.sql</code> file dekh sakte hain</span>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="block font-bold text-slate-700 mb-1">Supabase Project URL</label>
+                                        <input 
+                                            type="url" 
+                                            id="supabase-cfg-url" 
+                                            placeholder="https://xyzabcdefghij.supabase.co" 
+                                            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-emerald-500 font-mono text-xs bg-slate-50/50" 
+                                        />
+                                    </div>
+                                    <div>
+                                        <label class="block font-bold text-slate-700 mb-1">Supabase Anon Public API Key</label>
+                                        <input 
+                                            type="text" 
+                                            id="supabase-cfg-key" 
+                                            placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." 
+                                            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-emerald-500 font-mono text-xs bg-slate-50/50" 
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-wrap gap-2.5 pt-2">
+                                    <button 
+                                        type="button" 
+                                        onclick="handleSaveAndTestSupabase()" 
+                                        class="py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-extrabold rounded-xl shadow-xs transition flex items-center gap-1.5">
+                                        <i class="fas fa-plug"></i>
+                                        <span>Connect & Test Cloud Database</span>
+                                    </button>
+                                    <button 
+                                        type="button" 
+                                        onclick="handleSyncDataToSupabase()" 
+                                        class="py-2.5 px-4 bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-extrabold rounded-xl shadow-xs transition flex items-center gap-1.5">
+                                        <i class="fas fa-cloud-arrow-up"></i>
+                                        <span>Sync Existing Toys & Orders to Cloud</span>
+                                    </button>
+                                    <button 
+                                        type="button" 
+                                        onclick="handleDisconnectSupabase()" 
+                                        class="py-2.5 px-3 bg-red-50 hover:bg-red-100 text-red-600 font-extrabold rounded-xl transition">
+                                        Disconnect
+                                    </button>
+                                </div>
+
+                                <div id="supabase-connect-msg" class="hidden p-3 rounded-xl text-xs font-bold mt-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL 1: VIEW ORDER DETAILS -->
+    <div id="admin-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button onclick="closeAdminModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition-colors">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="admin-modal-content">
+                <!-- Injected dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: FULLSCREEN PAYMENT SCREENSHOT PREVIEW -->
+    <div id="slip-view-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 relative shadow-2xl">
+            <button onclick="closeSlipModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition-colors">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 id="slip-modal-title" class="font-extrabold text-sm text-slate-900 mb-3">Customer Payment Screenshot</h3>
+            <div class="max-h-[75vh] overflow-y-auto flex items-center justify-center bg-slate-50 p-2 rounded-2xl border border-slate-200">
+                <img id="slip-modal-img" src="" alt="Payment Proof" class="max-h-[70vh] object-contain rounded-xl" />
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: ADD PRODUCT -->
+    <div id="add-product-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button onclick="closeAddProductModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition-colors">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <h3 class="text-lg font-black text-slate-900 mb-4 font-heading">Add New Toy Product</h3>
+
+            <form onsubmit="handleAddProduct(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Toy Name *</label>
+                    <input type="text" id="new-toy-name" required placeholder="e.g. Remote Control Speed Boat" class="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-red-500 font-semibold" />
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Category</label>
+                        <select id="new-toy-category" class="w-full p-2.5 rounded-xl border border-slate-200 outline-none font-bold">
+                            <option value="rc-cars">RC & Cars</option>
+                            <option value="educational">Educational & Learning</option>
+                            <option value="dolls-figures">Dolls & Figures</option>
+                            <option value="building-blocks">Building Blocks</option>
+                            <option value="ride-ons">Ride-ons & Outdoor</option>
+                            <option value="baby-toddler">Baby & Toddler</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Selling Price (Rs.) *</label>
+                        <input type="number" id="new-toy-price" required placeholder="e.g. 2999" class="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-red-500 font-bold" />
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Original Cut Price (Optional)</label>
+                    <input type="number" id="new-toy-orig-price" placeholder="e.g. 3500" class="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-red-500" />
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Image URL *</label>
+                    <input type="url" id="new-toy-image" required placeholder="Paste image link here" class="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-red-500" />
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1 flex items-center justify-between">
+                        <span>YouTube Video Link (Optional)</span>
+                        <span class="text-[10px] text-red-600 font-black"><i class="fab fa-youtube"></i> YouTube Demo</span>
+                    </label>
+                    <input type="url" id="new-toy-video" placeholder="e.g. https://www.youtube.com/watch?v=... or https://youtu.be/..." class="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-red-500 font-medium" />
+                    <span class="text-[10px] text-slate-400 mt-0.5 block">Paste any YouTube video or Shorts link to display video in product details</span>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Short Description</label>
+                    <textarea id="new-toy-desc" rows="2" placeholder="Tell parents what makes this toy awesome..." class="w-full p-2 rounded-xl border border-slate-200 outline-none"></textarea>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-extrabold rounded-xl shadow-md text-xs active:scale-98">
+                        Save & Add to Website
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3B: EDIT PRODUCT & VIDEO LINK MODAL -->
+    <div id="edit-product-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 relative shadow-2xl max-h-[92vh] overflow-y-auto">
+            <button onclick="closeEditProductModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition-colors">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="flex items-center gap-2 mb-4">
+                <span class="p-2 rounded-xl bg-amber-100 text-amber-700 text-sm"><i class="fas fa-edit"></i></span>
+                <div>
+                    <h3 class="text-lg font-black text-slate-900 font-heading">Edit Toy Product & Video</h3>
+                    <p class="text-xs text-slate-400">Update toy details, prices and YouTube demo video link</p>
+                </div>
+            </div>
+
+            <form onsubmit="handleEditProductSubmit(event)" class="space-y-3.5 text-xs">
+                <input type="hidden" id="edit-toy-id" />
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Toy Name *</label>
+                    <input type="text" id="edit-toy-name" required class="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-red-500 font-semibold" />
+                </div>
+
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Category</label>
+                        <select id="edit-toy-category" class="w-full p-2.5 rounded-xl border border-slate-200 outline-none font-bold">
+                            <option value="rc-cars">RC & Cars</option>
+                            <option value="educational">Educational & Learning</option>
+                            <option value="dolls-figures">Dolls & Figures</option>
+                            <option value="building-blocks">Building Blocks</option>
+                            <option value="ride-ons">Ride-ons & Outdoor</option>
+                            <option value="baby-toddler">Baby & Toddler</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Stock Count</label>
+                        <input type="number" id="edit-toy-stock" min="0" class="w-full p-2.5 rounded-xl border border-slate-200 outline-none font-bold" />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Selling Price (Rs.) *</label>
+                        <input type="number" id="edit-toy-price" required class="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-red-500 font-bold" />
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Original Price (Rs.)</label>
+                        <input type="number" id="edit-toy-orig-price" class="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-red-500" />
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Image URL *</label>
+                    <input type="url" id="edit-toy-image" required class="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-red-500" />
+                </div>
+
+                <!-- YouTube Video Link Input -->
+                <div class="p-3 bg-red-50/70 rounded-2xl border border-red-200 space-y-1.5">
+                    <label class="block font-bold text-red-900 flex items-center justify-between">
+                        <span class="flex items-center gap-1.5"><i class="fab fa-youtube text-red-600 text-sm"></i> YouTube Video Link / URL</span>
+                        <span class="text-[10px] bg-red-200 text-red-800 px-2 py-0.2 rounded-full font-black">Video Demo</span>
+                    </label>
+                    <input 
+                        type="url" 
+                        id="edit-toy-video" 
+                        placeholder="e.g. https://www.youtube.com/watch?v=... or https://youtu.be/..." 
+                        class="w-full p-2.5 rounded-xl border border-red-200 bg-white outline-none focus:border-red-500 font-medium" 
+                    />
+                    <div class="flex items-center justify-between text-[10px] text-red-700">
+                        <span>Video product details modal mein live play hogi</span>
+                        <a id="edit-toy-video-test" href="#" target="_blank" class="hidden font-bold underline hover:text-red-900">Test Link ↗</a>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Short Description</label>
+                    <textarea id="edit-toy-desc" rows="3" class="w-full p-2 rounded-xl border border-slate-200 outline-none text-xs"></textarea>
+                </div>
+
+                <div class="pt-2 flex items-center gap-2">
+                    <button type="button" onclick="closeEditProductModal()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">
+                        Cancel
+                    </button>
+                    <button type="submit" class="flex-2 py-3 bg-red-600 hover:bg-red-700 text-white font-extrabold rounded-xl shadow-md text-xs active:scale-98 transition">
+                        Save Changes & Video
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 4: CUSTOMER PROFILE & ORDER HISTORY MODAL -->
+    <div id="customer-profile-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 relative shadow-2xl max-h-[92vh] overflow-y-auto">
+            <button onclick="closeCustomerModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition-colors">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="customer-modal-content">
+                <!-- Injected dynamically by js/admin.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
