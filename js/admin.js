@@ -20,7 +20,134 @@ let categoryChartInstance = null;
 let analyticsSalesChartInstance = null;
 let currentAnalyticsPeriod = '7days';
 
+// ================================================================
+// THEME SWITCHER CONTROLLER (1-CLICK DARK / LIGHT MODE)
+// ================================================================
+
+function getAdminTheme() {
+    return localStorage.getItem('mehar_toys_admin_theme') || 'light';
+}
+
+function initAdminTheme() {
+    applyAdminTheme(getAdminTheme());
+}
+
+function toggleAdminTheme() {
+    const currentTheme = getAdminTheme();
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    applyAdminTheme(newTheme);
+}
+
+function applyAdminTheme(theme) {
+    if (theme !== 'dark' && theme !== 'light') theme = 'light';
+    localStorage.setItem('mehar_toys_admin_theme', theme);
+
+    const isDark = theme === 'dark';
+    if (isDark) {
+        document.body.classList.remove('light-theme');
+        document.body.classList.add('dark-theme');
+        document.documentElement.classList.add('dark');
+    } else {
+        document.body.classList.remove('dark-theme');
+        document.body.classList.add('light-theme');
+        document.documentElement.classList.remove('dark');
+    }
+
+    updateThemeToggleUI(theme);
+    updateChartsForTheme(theme);
+    updateGreetingTime();
+}
+
+function updateThemeToggleUI(theme) {
+    const isDark = theme === 'dark';
+
+    // 1. Top Header Toggle Button
+    const headerBtn = document.getElementById('admin-theme-toggle-btn');
+    const headerIcon = document.getElementById('theme-toggle-icon');
+    const headerLabel = document.getElementById('theme-toggle-label');
+
+    if (headerBtn) {
+        if (isDark) {
+            headerBtn.className = 'theme-toggle-btn px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-2xl flex items-center gap-2 text-xs font-bold transition-all bg-[#0F1426] hover:bg-[#161D36] text-amber-300 border border-amber-400/35 shadow-[0_0_15px_rgba(245,158,11,0.2)] active:scale-95 cursor-pointer';
+            if (headerIcon) headerIcon.innerHTML = '<i class="fas fa-moon text-amber-400 text-sm"></i>';
+            if (headerLabel) headerLabel.textContent = 'Dark Mode';
+        } else {
+            headerBtn.className = 'theme-toggle-btn px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-2xl flex items-center gap-2 text-xs font-bold transition-all bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-sm active:scale-95 cursor-pointer';
+            if (headerIcon) headerIcon.innerHTML = '<i class="fas fa-sun text-amber-500 text-sm"></i>';
+            if (headerLabel) headerLabel.textContent = 'Light Mode';
+        }
+    }
+
+    // 2. Login Screen Toggle Button
+    const loginBtn = document.getElementById('login-theme-toggle-btn');
+    if (loginBtn) {
+        if (isDark) {
+            loginBtn.className = 'px-3.5 py-2 rounded-2xl text-xs font-bold transition-all bg-[#0F1426] hover:bg-[#161D36] text-amber-300 border border-amber-400/30 shadow-md flex items-center gap-2 active:scale-95 cursor-pointer';
+            loginBtn.innerHTML = '<i class="fas fa-moon text-amber-400"></i> <span>Dark Theme</span>';
+        } else {
+            loginBtn.className = 'px-3.5 py-2 rounded-2xl text-xs font-bold transition-all bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-sm flex items-center gap-2 active:scale-95 cursor-pointer';
+            loginBtn.innerHTML = '<i class="fas fa-sun text-amber-500"></i> <span>Light Theme</span>';
+        }
+    }
+}
+
+function updateChartsForTheme(theme) {
+    const isDark = theme === 'dark';
+
+    // Sales Chart
+    if (typeof salesChartInstance !== 'undefined' && salesChartInstance) {
+        const ds = salesChartInstance.data.datasets[0];
+        if (ds) {
+            ds.borderColor = isDark ? '#F59E0B' : '#EF4444';
+            ds.backgroundColor = isDark ? 'rgba(245, 158, 11, 0.12)' : 'rgba(239, 68, 68, 0.08)';
+            ds.pointBackgroundColor = isDark ? '#FDE68A' : '#EF4444';
+            ds.pointBorderColor = isDark ? '#B45309' : '#FFFFFF';
+        }
+        if (salesChartInstance.options && salesChartInstance.options.scales) {
+            const sc = salesChartInstance.options.scales;
+            if (sc.y && sc.y.grid) sc.y.grid.color = isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.04)';
+            if (sc.y && sc.y.ticks) sc.y.ticks.color = isDark ? '#94A3B8' : '#64748B';
+            if (sc.x && sc.x.ticks) sc.x.ticks.color = isDark ? '#94A3B8' : '#64748B';
+        }
+        if (salesChartInstance.options && salesChartInstance.options.plugins && salesChartInstance.options.plugins.tooltip) {
+            salesChartInstance.options.plugins.tooltip.backgroundColor = isDark ? '#0F1424' : '#1E293B';
+            salesChartInstance.options.plugins.tooltip.titleColor = isDark ? '#FDE68A' : '#FFFFFF';
+        }
+        salesChartInstance.update();
+    }
+
+    // Orders Doughnut Chart
+    if (typeof ordersChartInstance !== 'undefined' && ordersChartInstance) {
+        const ds = ordersChartInstance.data.datasets[0];
+        if (ds) {
+            ds.borderColor = isDark ? '#0F1424' : '#FFFFFF';
+        }
+        if (ordersChartInstance.options && ordersChartInstance.options.plugins && ordersChartInstance.options.plugins.legend) {
+            ordersChartInstance.options.plugins.legend.labels.color = isDark ? '#CBD5E1' : '#475569';
+        }
+        ordersChartInstance.update();
+    }
+
+    // Analytics Chart
+    if (typeof analyticsSalesChartInstance !== 'undefined' && analyticsSalesChartInstance) {
+        const ds = analyticsSalesChartInstance.data.datasets[0];
+        if (ds) {
+            ds.borderColor = isDark ? '#F59E0B' : '#2563EB';
+            ds.pointBackgroundColor = isDark ? '#FDE68A' : '#2563EB';
+            ds.pointBorderColor = isDark ? '#B45309' : '#FFFFFF';
+        }
+        if (analyticsSalesChartInstance.options && analyticsSalesChartInstance.options.scales) {
+            const sc = analyticsSalesChartInstance.options.scales;
+            if (sc.y && sc.y.grid) sc.y.grid.color = isDark ? 'rgba(255, 255, 255, 0.06)' : '#F1F5F9';
+            if (sc.y && sc.y.ticks) sc.y.ticks.color = isDark ? '#94A3B8' : '#64748B';
+            if (sc.x && sc.x.ticks) sc.x.ticks.color = isDark ? '#94A3B8' : '#64748B';
+        }
+        analyticsSalesChartInstance.update();
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    initAdminTheme();
     checkAuth();
     setupAdminEventListeners();
 });
@@ -200,7 +327,12 @@ function updateGreetingTime() {
     if (hour >= 12 && hour < 17) greeting = "Good Afternoon";
     else if (hour >= 17) greeting = "Good Evening";
 
-    greetingEl.innerHTML = `${greeting}, <span class="text-red-500 font-extrabold">Muhammad Jameel</span>`;
+    const isDark = document.body && document.body.classList.contains('dark-theme');
+    const nameClass = isDark 
+        ? "bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 bg-clip-text text-transparent font-extrabold" 
+        : "text-red-600 font-extrabold";
+
+    greetingEl.innerHTML = `${greeting}, <span class="${nameClass}">Muhammad Jameel</span>`;
 }
 
 // ----------------------------------------------------------------

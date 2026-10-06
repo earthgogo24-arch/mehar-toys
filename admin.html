@@ -39,39 +39,42 @@
     <!-- Chart.js CDN for Interactive Graphs -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        <style>
+            <style>
         /* ==========================================================================
-           ROYAL EXECUTIVE LUXURY ADMIN SUITE (OBSIDIAN VELVET & CHAMPAGNE GOLD)
+           DUAL-THEME ENGINE (1-CLICK TOGGLE: LIGHT LUXURY vs ROYAL OBSIDIAN DARK)
            ========================================================================== */
+
+        /* --- BASE STYLES (Clean Light Mode by Default) --- */
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #06080F !important;
-            color: #E2E8F0 !important;
-            background-image: 
-                radial-gradient(circle at 12% 15%, rgba(212, 175, 55, 0.06) 0%, transparent 45%),
-                radial-gradient(circle at 88% 85%, rgba(245, 158, 11, 0.04) 0%, transparent 45%),
-                radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.6) 0%, transparent 75%);
-            background-attachment: fixed;
+            background-color: #F8FAFC;
+            color: #1E293B;
+            transition: background-color 0.25s ease, color 0.25s ease;
         }
 
-        /* Custom Slim Gold Scrollbar */
+        /* Standard Light Scrollbars */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #070A14;
+            background: #f1f5f9;
         }
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #D4AF37 0%, #8E6D18 100%);
+            background: #cbd5e1;
             border-radius: 8px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #F59E0B;
+            background: #94a3b8;
+        }
+
+        .stat-card-shadow {
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+            transition: all 0.22s ease;
         }
         .sidebar-scroll {
             scrollbar-width: thin;
-            scrollbar-color: rgba(212, 175, 55, 0.4) #070A14;
+            scrollbar-color: #e2e8f0 transparent;
         }
         .no-scrollbar::-webkit-scrollbar {
             display: none;
@@ -81,34 +84,174 @@
             scrollbar-width: none;
         }
 
-        /* Dashboard Background & Layout */
-        #admin-dashboard {
+        /* Light Mode Sidebar Nav Buttons */
+        .workspace-nav-btn {
+            color: #475569;
+            transition: all 0.2s ease;
+        }
+        .workspace-nav-btn:hover {
+            background-color: #F1F5F9;
+            color: #0F172A;
+        }
+        .workspace-nav-btn.active-tab {
+            background-color: #0F172A !important;
+            color: #FFFFFF !important;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15) !important;
+        }
+        .workspace-nav-btn.active-tab i {
+            color: #F59E0B !important;
+        }
+        .workspace-nav-btn.active-tab span {
+            color: #FFFFFF !important;
+        }
+        .workspace-nav-btn.active-tab .active-dot {
+            background-color: #F59E0B !important;
+            display: block !important;
+        }
+
+        /* --- LIGHT THEME SPECIFICS --- */
+        body:not(.dark-theme),
+        body.light-theme {
+            background-color: #F8FAFC !important;
+            color: #1E293B !important;
+        }
+        body:not(.dark-theme) #admin-dashboard,
+        body.light-theme #admin-dashboard {
+            background-color: #F8FAFC !important;
+        }
+        body:not(.dark-theme) #admin-dashboard aside,
+        body.light-theme #admin-dashboard aside {
+            background-color: #FFFFFF !important;
+            border-right: 1px solid #E2E8F0 !important;
+        }
+        body:not(.dark-theme) #admin-dashboard header,
+        body.light-theme #admin-dashboard header {
+            background-color: #FFFFFF !important;
+            border-bottom: 1px solid #E2E8F0 !important;
+        }
+        body:not(.dark-theme) #global-search,
+        body.light-theme #global-search {
+            background-color: #F1F5F9 !important;
+            border-color: #E2E8F0 !important;
+            color: #0F172A !important;
+        }
+        body:not(.dark-theme) #login-screen,
+        body.light-theme #login-screen {
+            background: linear-gradient(135deg, #F8FAFC 0%, #FEF3C7 50%, #FFEDD5 100%) !important;
+        }
+        body:not(.dark-theme) #login-card,
+        body.light-theme #login-card {
+            background: #FFFFFF !important;
+            border: 1px solid #E2E8F0 !important;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.15) !important;
+        }
+        body:not(.dark-theme) #login-title,
+        body.light-theme #login-title {
+            color: #0F172A !important;
+            -webkit-text-fill-color: initial !important;
+            background: none !important;
+        }
+        body:not(.dark-theme) #login-subtitle,
+        body.light-theme #login-subtitle {
+            color: #64748B !important;
+        }
+        body:not(.dark-theme) #admin-username,
+        body.light-theme #admin-username,
+                body:not(.dark-theme) #admin-greeting-text,
+        body.light-theme #admin-greeting-text {
+            color: #0F172A !important;
+        }
+        body:not(.dark-theme) #admin-greeting-text span,
+        body.light-theme #admin-greeting-text span {
+            color: #EF4444 !important;
+            -webkit-text-fill-color: initial !important;
+            background: none !important;
+        }
+        body:not(.dark-theme) #top-breadcrumb,
+        body.light-theme #top-breadcrumb {
+            color: #64748B !important;
+        }
+        body:not(.dark-theme) #top-greeting-sub,
+        body.light-theme #top-greeting-sub {
+            color: #64748B !important;
+        }
+        body:not(.dark-theme) #admin-password,
+        body.light-theme #admin-password {
+            background-color: #F8FAFC !important;
+            border-color: #CBD5E1 !important;
+            color: #0F172A !important;
+        }
+
+        /* ==========================================================================
+           ROYAL EXECUTIVE LUXURY DARK THEME (SCOPED TO body.dark-theme)
+           ========================================================================== */
+        body.dark-theme {
+            background-color: #06080F !important;
+            color: #E2E8F0 !important;
+            background-image: 
+                radial-gradient(circle at 12% 15%, rgba(212, 175, 55, 0.06) 0%, transparent 45%),
+                radial-gradient(circle at 88% 85%, rgba(245, 158, 11, 0.04) 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.6) 0%, transparent 75%) !important;
+            background-attachment: fixed;
+        }
+
+        /* Dark Theme Gold Scrollbar */
+        body.dark-theme ::-webkit-scrollbar-track {
+            background: #070A14 !important;
+        }
+        body.dark-theme ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #D4AF37 0%, #8E6D18 100%) !important;
+        }
+        body.dark-theme ::-webkit-scrollbar-thumb:hover {
+            background: #F59E0B !important;
+        }
+        body.dark-theme .sidebar-scroll {
+            scrollbar-color: rgba(212, 175, 55, 0.4) #070A14 !important;
+        }
+
+        /* Dark Mode Greetings */
+        body.dark-theme #top-breadcrumb {
+            color: rgba(245, 158, 11, 0.85) !important;
+        }
+        body.dark-theme #admin-greeting-text {
+            color: #FFFFFF !important;
+        }
+        body.dark-theme #admin-greeting-text span {
+            background: linear-gradient(135deg, #FFFBEB 0%, #FDE68A 30%, #F59E0B 70%, #D97706 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+        }
+        body.dark-theme #top-greeting-sub {
+            color: #94A3B8 !important;
+        }
+
+        /* Dashboard Surface in Dark */
+        body.dark-theme #admin-dashboard {
             background-color: #06080F !important;
         }
-        #admin-dashboard > div.flex-1 {
+        body.dark-theme #admin-dashboard > div.flex-1 {
             background-color: #06080F !important;
         }
 
-        /* Sidebar Styling */
-        #admin-dashboard aside {
+        /* Sidebar in Dark */
+        body.dark-theme #admin-dashboard aside {
             background: rgba(8, 11, 20, 0.96) !important;
             border-right: 1px solid rgba(212, 175, 55, 0.18) !important;
             box-shadow: 4px 0 30px rgba(0, 0, 0, 0.5) !important;
         }
-
-        .workspace-nav-btn {
+        body.dark-theme .workspace-nav-btn {
             color: #94A3B8 !important;
             background: transparent;
-            transition: all 0.22s ease-in-out;
             border: 1px solid transparent;
         }
-        .workspace-nav-btn:hover {
+        body.dark-theme .workspace-nav-btn:hover {
             color: #FFFFFF !important;
             background: rgba(212, 175, 55, 0.09) !important;
             border-color: rgba(212, 175, 55, 0.25) !important;
             transform: translateX(2px);
         }
-        .workspace-nav-btn.active-tab {
+        body.dark-theme .workspace-nav-btn.active-tab {
             background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 50%, #D97706 100%) !important;
             color: #07090E !important;
             font-weight: 900 !important;
@@ -116,190 +259,224 @@
             box-shadow: 0 4px 20px rgba(245, 158, 11, 0.35) !important;
             transform: translateX(3px);
         }
-        .workspace-nav-btn.active-tab i {
+        body.dark-theme .workspace-nav-btn.active-tab i,
+        body.dark-theme .workspace-nav-btn.active-tab span {
             color: #07090E !important;
         }
-        .workspace-nav-btn.active-tab span {
-            color: #07090E !important;
-        }
-        .workspace-nav-btn.active-tab .active-dot {
+        body.dark-theme .workspace-nav-btn.active-tab .active-dot {
             background-color: #07090E !important;
             display: block !important;
         }
+        body.dark-theme #sidebar-brand-header {
+            border-bottom-color: rgba(212, 175, 55, 0.15) !important;
+        }
+        body.dark-theme #sidebar-profile-card {
+            background: #090C16 !important;
+            border-top-color: rgba(212, 175, 55, 0.15) !important;
+        }
+        body.dark-theme #sidebar-profile-inner {
+            background: #0F1424 !important;
+            border-color: rgba(212, 175, 55, 0.25) !important;
+        }
 
-        /* Top Header */
-        #admin-dashboard header {
+        /* Top Header in Dark */
+        body.dark-theme #admin-dashboard header {
             background: rgba(8, 11, 20, 0.92) !important;
             backdrop-filter: blur(20px) !important;
             border-bottom: 1px solid rgba(212, 175, 55, 0.16) !important;
         }
+        body.dark-theme #global-search {
+            background-color: #0D1222 !important;
+            border-color: rgba(212, 175, 55, 0.2) !important;
+            color: #FFFFFF !important;
+        }
+        body.dark-theme .theme-search-icon {
+            color: #F59E0B !important;
+        }
+        body.dark-theme .theme-header-btn {
+            background-color: #0D1222 !important;
+            color: #CBD5E1 !important;
+            border: 1px solid rgba(212, 175, 55, 0.2) !important;
+        }
+        body.dark-theme .theme-profile-pill {
+            border-left-color: rgba(212, 175, 55, 0.2) !important;
+        }
+        body.dark-theme .theme-owner-name {
+            color: #FFFFFF !important;
+        }
+        body.dark-theme .theme-owner-role {
+            color: #F59E0B !important;
+        }
 
-        /* Cards, Surfaces & Stat Containers */
-        #admin-dashboard .bg-white {
+        /* Cards & Surfaces in Dark */
+        body.dark-theme #admin-dashboard .bg-white {
             background: linear-gradient(180deg, rgba(16, 21, 38, 0.88) 0%, rgba(10, 13, 24, 0.95) 100%) !important;
             border-color: rgba(212, 175, 55, 0.18) !important;
             color: #E2E8F0 !important;
             box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
             backdrop-filter: blur(16px);
         }
-        #admin-dashboard .stat-card-shadow {
+        body.dark-theme #admin-dashboard .stat-card-shadow {
             box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 0 1px rgba(212, 175, 55, 0.2) !important;
-            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
         }
-        #admin-dashboard .stat-card-shadow:hover {
+        body.dark-theme #admin-dashboard .stat-card-shadow:hover {
             border-color: rgba(212, 175, 55, 0.35) !important;
             box-shadow: 0 14px 35px -5px rgba(0, 0, 0, 0.6), 0 0 25px rgba(212, 175, 55, 0.12) !important;
         }
-
-        #admin-dashboard .bg-slate-50,
-        #admin-dashboard .bg-slate-100 {
+        body.dark-theme #admin-dashboard .bg-slate-50,
+        body.dark-theme #admin-dashboard .bg-slate-100 {
             background: rgba(12, 16, 28, 0.78) !important;
             border-color: rgba(212, 175, 55, 0.14) !important;
             color: #CBD5E1 !important;
         }
-
-        #admin-dashboard .border-slate-200,
-        #admin-dashboard .border-slate-100 {
+        body.dark-theme #admin-dashboard .border-slate-200,
+        body.dark-theme #admin-dashboard .border-slate-100 {
             border-color: rgba(212, 175, 55, 0.16) !important;
         }
 
-        /* Typography */
-        #admin-dashboard .text-slate-900,
-        #admin-dashboard .text-slate-800 {
+        /* Typography in Dark */
+        body.dark-theme #admin-dashboard .text-slate-900,
+        body.dark-theme #admin-dashboard .text-slate-800 {
             color: #FFFFFF !important;
         }
-        #admin-dashboard .text-slate-700,
-        #admin-dashboard .text-slate-600 {
+        body.dark-theme #admin-dashboard .text-slate-700,
+        body.dark-theme #admin-dashboard .text-slate-600 {
             color: #CBD5E1 !important;
         }
-        #admin-dashboard .text-slate-500,
-        #admin-dashboard .text-slate-400 {
+        body.dark-theme #admin-dashboard .text-slate-500,
+        body.dark-theme #admin-dashboard .text-slate-400 {
             color: #94A3B8 !important;
         }
 
-        /* Form Controls */
-        #admin-dashboard input:not([type="checkbox"]):not([type="radio"]),
-        #admin-dashboard select,
-        #admin-dashboard textarea {
+        /* Form Controls in Dark */
+        body.dark-theme #admin-dashboard input:not([type="checkbox"]):not([type="radio"]),
+        body.dark-theme #admin-dashboard select,
+        body.dark-theme #admin-dashboard textarea {
             background-color: rgba(7, 10, 18, 0.92) !important;
             border: 1px solid rgba(212, 175, 55, 0.24) !important;
             color: #FFFFFF !important;
-            transition: all 0.2s ease;
         }
-        #admin-dashboard input:focus,
-        #admin-dashboard select:focus,
-        #admin-dashboard textarea:focus {
+        body.dark-theme #admin-dashboard input:focus,
+        body.dark-theme #admin-dashboard select:focus,
+        body.dark-theme #admin-dashboard textarea:focus {
             border-color: #D4AF37 !important;
             box-shadow: 0 0 16px rgba(212, 175, 55, 0.25) !important;
             background-color: rgba(11, 15, 27, 0.98) !important;
         }
-        #admin-dashboard select option {
-            background-color: #0D1222;
-            color: #FFFFFF;
+        body.dark-theme #admin-dashboard select option {
+            background-color: #0D1222 !important;
+            color: #FFFFFF !important;
         }
 
-        /* Tables Overhaul */
-        #admin-dashboard table thead,
-        #admin-dashboard thead tr,
-        #admin-dashboard thead th {
+        /* Tables in Dark */
+        body.dark-theme #admin-dashboard table thead,
+        body.dark-theme #admin-dashboard thead tr,
+        body.dark-theme #admin-dashboard thead th {
             background-color: #0A0E1C !important;
             color: #F59E0B !important;
             border-bottom: 1px solid rgba(212, 175, 55, 0.22) !important;
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 0.06em;
         }
-        #admin-dashboard table tbody tr {
+        body.dark-theme #admin-dashboard table tbody tr {
             border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
             color: #E2E8F0 !important;
-            transition: background-color 0.15s ease;
         }
-        #admin-dashboard table tbody tr:hover {
+        body.dark-theme #admin-dashboard table tbody tr:hover {
             background-color: rgba(212, 175, 55, 0.06) !important;
         }
-        #admin-dashboard table td {
-            color: #E2E8F0;
+        body.dark-theme #admin-dashboard table td {
+            color: #E2E8F0 !important;
         }
 
-        /* Glowing Jewel Badges */
-        #admin-dashboard .bg-amber-50,
-        #admin-dashboard .bg-amber-100 {
+        /* Jewel Badges in Dark */
+        body.dark-theme #admin-dashboard .bg-amber-50,
+        body.dark-theme #admin-dashboard .bg-amber-100 {
             background: rgba(245, 158, 11, 0.16) !important;
             color: #FDE68A !important;
             border: 1px solid rgba(245, 158, 11, 0.4) !important;
         }
-        #admin-dashboard .bg-emerald-50,
-        #admin-dashboard .bg-emerald-100 {
+        body.dark-theme #admin-dashboard .bg-emerald-50,
+        body.dark-theme #admin-dashboard .bg-emerald-100 {
             background: rgba(16, 185, 129, 0.16) !important;
             color: #6EE7B7 !important;
             border: 1px solid rgba(16, 185, 129, 0.4) !important;
         }
-        #admin-dashboard .bg-blue-50,
-        #admin-dashboard .bg-blue-100 {
+        body.dark-theme #admin-dashboard .bg-blue-50,
+        body.dark-theme #admin-dashboard .bg-blue-100 {
             background: rgba(59, 130, 246, 0.16) !important;
             color: #93C5FD !important;
             border: 1px solid rgba(59, 130, 246, 0.4) !important;
         }
-        #admin-dashboard .bg-red-50,
-        #admin-dashboard .bg-red-100 {
+        body.dark-theme #admin-dashboard .bg-red-50,
+        body.dark-theme #admin-dashboard .bg-red-100 {
             background: rgba(239, 68, 68, 0.16) !important;
             color: #FCA5A5 !important;
             border: 1px solid rgba(239, 68, 68, 0.4) !important;
         }
-        #admin-dashboard .bg-purple-50,
-        #admin-dashboard .bg-purple-100 {
-            background: rgba(168, 85, 247, 0.16) !important;
-            color: #D8B4FE !important;
-            border: 1px solid rgba(168, 85, 247, 0.4) !important;
-        }
 
-        /* Modals & Dialogs */
-        #admin-modal > div,
-        #slip-view-modal > div,
-        #add-product-modal > div,
-        #edit-product-modal > div,
-        #customer-profile-modal > div {
+        /* Modals in Dark */
+        body.dark-theme #admin-modal > div,
+        body.dark-theme #slip-view-modal > div,
+        body.dark-theme #add-product-modal > div,
+        body.dark-theme #edit-product-modal > div,
+        body.dark-theme #customer-profile-modal > div {
             background: linear-gradient(180deg, #111524 0%, #090C16 100%) !important;
             border: 1px solid rgba(212, 175, 55, 0.35) !important;
             box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.8), 0 0 50px rgba(212, 175, 55, 0.15) !important;
             color: #E2E8F0 !important;
         }
 
-        /* Analytics Filter Pills */
-        .analytics-pill {
-            transition: all 0.2s ease;
+        /* Login Screen in Dark */
+        body.dark-theme #login-screen {
+            background: radial-gradient(circle at 50% 30%, rgba(212, 175, 55, 0.12) 0%, rgba(6, 8, 15, 0.98) 75%), #06080F !important;
         }
-        .analytics-pill.bg-slate-900 {
-            background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 50%, #D97706 100%) !important;
-            color: #07090E !important;
-            font-weight: 800 !important;
-            border: 1px solid #FDE68A !important;
-            box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3) !important;
+        body.dark-theme #login-card {
+            background: linear-gradient(180deg, rgba(17, 22, 38, 0.95) 0%, rgba(9, 12, 23, 0.98) 100%) !important;
+            border: 1px solid rgba(212, 175, 55, 0.35) !important;
+            box-shadow: 0 25px 60px -15px rgba(0,0,0,0.8), 0 0 50px rgba(212, 175, 55, 0.15) !important;
         }
     </style>
+    <!-- Immediate Theme Initialization (Zero Flash) -->
+    <script>
+        (function() {
+            var savedTheme = localStorage.getItem('mehar_toys_admin_theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col">
 
     <!-- LOGIN SCREEN (If not authenticated) -->
-    <div id="login-screen" class="min-h-screen flex items-center justify-center p-4 bg-[#06080F] relative overflow-hidden">
-        <!-- Ambient luxury glow circles -->
-        <div class="absolute -top-32 -left-32 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-yellow-600/10 rounded-full blur-3xl pointer-events-none"></div>
-        
-        <div class="relative z-10 bg-gradient-to-b from-[#111628]/95 to-[#090C17]/98 backdrop-blur-2xl rounded-3xl p-8 sm:p-10 max-w-md w-full shadow-2xl border border-amber-400/30 text-center">
+    <div id="login-screen" class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden transition-colors">
+        <!-- Top Right Theme Toggle on Login Screen -->
+        <div class="absolute top-5 right-5 z-20">
+            <button 
+                id="login-theme-toggle-btn"
+                onclick="toggleAdminTheme()" 
+                class="px-3.5 py-2 rounded-2xl text-xs font-bold transition-all shadow-sm border flex items-center gap-2 cursor-pointer active:scale-95 bg-white text-slate-700 border-slate-200"
+                title="1-Click: Switch between Light & Dark Mode">
+                <i class="fas fa-circle-half-stroke text-amber-500"></i>
+                <span id="login-theme-label">Switch Theme</span>
+            </button>
+        </div>
+
+        <div id="login-card" class="relative z-10 rounded-3xl p-8 sm:p-10 max-w-md w-full shadow-2xl border text-center transition-all">
             <!-- Royal Gold Crest Monogram -->
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400/20 via-yellow-500/15 to-amber-600/25 border border-amber-400/40 text-amber-300 flex items-center justify-center text-3xl mx-auto mb-4 shadow-[0_0_25px_rgba(245,158,11,0.25)]">
+            <div class="w-16 h-16 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-3xl mx-auto mb-4 shadow-sm border border-amber-200">
                 👑
             </div>
-            <h2 class="text-2xl font-black bg-gradient-to-r from-amber-100 via-amber-300 to-yellow-500 bg-clip-text text-transparent font-heading tracking-tight">MEHAR TOYS</h2>
-            <p class="text-xs text-amber-200/70 mb-6 font-semibold uppercase tracking-wider">Royal Executive Admin Console</p>
+            <h2 id="login-title" class="text-2xl font-black text-slate-900 font-heading tracking-tight">MEHAR TOYS</h2>
+            <p id="login-subtitle" class="text-xs text-slate-500 mb-6 font-semibold uppercase tracking-wider">Owner & Admin Console Login</p>
 
-            <div id="login-error" class="hidden mb-4 p-3 bg-red-950/60 text-red-300 text-xs rounded-xl border border-red-500/40 font-bold"></div>
+            <div id="login-error" class="hidden mb-4 p-3 bg-red-50 text-red-700 text-xs rounded-xl border border-red-200 font-bold"></div>
 
             <form onsubmit="handleLogin(event)" class="space-y-4 text-left">
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1 flex items-center gap-1.5">
-                        <i class="fas fa-user-shield text-amber-400 text-[11px]"></i>
+                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
+                        <i class="fas fa-user-shield text-amber-500 text-[11px]"></i>
                         <span>Username</span>
                     </label>
                     <input 
@@ -307,13 +484,13 @@
                         id="admin-username" 
                         required 
                         value="admin"
-                        class="w-full px-3.5 py-2.5 rounded-xl bg-[#080B15] border border-amber-400/30 focus:border-amber-400 outline-none text-xs font-semibold text-white placeholder-slate-500 transition-all focus:shadow-[0_0_15px_rgba(245,158,11,0.2)]"
+                        class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-amber-500 outline-none text-xs font-semibold text-slate-800 transition-all"
                     />
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1 flex items-center gap-1.5">
-                        <i class="fas fa-key text-amber-400 text-[11px]"></i>
+                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
+                        <i class="fas fa-key text-amber-500 text-[11px]"></i>
                         <span>Password</span>
                     </label>
                     <input 
@@ -321,28 +498,28 @@
                         id="admin-password" 
                         required 
                         value="admin123"
-                        class="w-full px-3.5 py-2.5 rounded-xl bg-[#080B15] border border-amber-400/30 focus:border-amber-400 outline-none text-xs font-semibold text-white placeholder-slate-500 transition-all focus:shadow-[0_0_15px_rgba(245,158,11,0.2)]"
+                        class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:border-amber-500 outline-none text-xs font-semibold text-slate-800 transition-all"
                     />
                 </div>
 
-                <div class="bg-amber-950/30 p-3 rounded-xl border border-amber-400/25 text-[11px] text-amber-200/90 flex items-start gap-2">
+                <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 text-[11px] text-amber-900 flex items-start gap-2">
                     <span class="text-base leading-none">💡</span>
                     <div>
-                        <strong class="text-amber-300 font-extrabold">Default Credentials:</strong><br>
-                        Username: <span class="text-white font-mono font-bold">admin</span> &nbsp;|&nbsp; Password: <span class="text-white font-mono font-bold">admin123</span>
+                        <strong class="text-amber-800 font-extrabold">Default Credentials:</strong><br>
+                        Username: <span class="font-mono font-bold text-slate-900">admin</span> &nbsp;|&nbsp; Password: <span class="font-mono font-bold text-slate-900">admin123</span>
                     </div>
                 </div>
 
                 <button 
                     type="submit" 
-                    class="w-full py-3.5 bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black rounded-xl shadow-lg shadow-amber-400/25 transition-transform active:scale-98 text-xs flex items-center justify-center gap-2">
-                    <span>Sign In to Executive Console</span>
+                    class="w-full py-3.5 bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black rounded-xl shadow-lg shadow-amber-400/25 transition-transform active:scale-98 text-xs flex items-center justify-center gap-2 cursor-pointer">
+                    <span>Sign In to Dashboard</span>
                     <i class="fas fa-arrow-right"></i>
                 </button>
             </form>
 
-            <div class="mt-6 pt-4 border-t border-white/10 text-xs">
-                <a href="index.html" class="text-slate-400 hover:text-amber-300 flex items-center justify-center gap-1.5 font-bold transition-colors">
+            <div class="mt-6 pt-4 border-t border-slate-200/60 text-xs">
+                <a href="index.html" class="text-slate-500 hover:text-amber-600 flex items-center justify-center gap-1.5 font-bold transition-colors">
                     <i class="fas fa-arrow-left"></i>
                     <span>Back to Toy Store Website</span>
                 </a>
@@ -361,13 +538,13 @@
             <!-- Top Section with Brand & Navigation -->
             <div class="flex flex-col flex-1 min-h-0">
                 <!-- Brand Header -->
-                <div class="p-5 pb-4 border-b border-amber-400/15 flex items-center gap-3 flex-shrink-0">
-                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-xl shadow-lg shadow-amber-400/20 text-slate-950">
+                <div id="sidebar-brand-header" class="p-5 pb-4 border-b border-slate-100 flex items-center gap-3 flex-shrink-0 transition-colors">
+                    <div id="sidebar-brand-badge" class="w-10 h-10 rounded-2xl bg-amber-400 text-slate-900 flex items-center justify-center text-xl shadow-md transition-colors">
                         👑
                     </div>
                     <div>
-                        <div class="font-black bg-gradient-to-r from-amber-200 via-amber-400 to-yellow-400 bg-clip-text text-transparent text-base leading-none tracking-tight">MEHAR TOYS</div>
-                        <div class="text-[9px] text-amber-400/70 font-black uppercase tracking-widest mt-1">Royal Executive Suite</div>
+                        <div id="sidebar-brand-title" class="font-black text-slate-900 text-base leading-none tracking-tight transition-colors">MEHAR TOYS</div>
+                        <div id="sidebar-brand-subtitle" class="text-[9px] text-slate-400 font-extrabold uppercase tracking-widest mt-1 transition-colors">Admin Panel</div>
                     </div>
                 </div>
 
@@ -563,32 +740,33 @@
             </div>
 
             <!-- Sidebar Bottom Profile Section (Luxury Royal Styling) -->
-            <div class="p-3.5 border-t border-amber-400/15 space-y-2.5 bg-[#090C16]/80 flex-shrink-0">
-                <div class="flex items-center justify-between p-2.5 rounded-2xl bg-[#0F1424] border border-amber-400/25 shadow-sm">
+            <div id="sidebar-profile-card" class="p-3.5 border-t border-slate-100 space-y-2.5 bg-slate-50/60 flex-shrink-0 transition-colors">
+                <div id="sidebar-profile-inner" class="flex items-center justify-between p-2.5 rounded-2xl bg-white border border-slate-200 shadow-sm transition-colors">
                     <div class="flex items-center gap-2.5">
-                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400/20 to-yellow-500/10 text-amber-300 font-black flex items-center justify-center text-xs tracking-wider border border-amber-400/30">
+                        <div id="sidebar-profile-avatar" class="w-9 h-9 rounded-xl bg-[#EFE8D8] text-[#5C4D32] font-black flex items-center justify-center text-xs tracking-wider border border-[#E2D8C0]">
                             MT
                         </div>
                         <div class="min-w-0">
-                            <div class="text-[10px] text-amber-400/70 font-bold uppercase tracking-wider leading-tight">Store Owner</div>
-                            <div class="text-xs font-black text-white leading-tight">Muhammad Jameel</div>
+                            <div id="sidebar-profile-role" class="text-[10px] text-slate-400 font-semibold leading-tight">Store Owner</div>
+                            <div id="sidebar-profile-name" class="text-xs font-black text-slate-900 leading-tight">Muhammad Jameel</div>
                         </div>
                     </div>
                     <!-- Live green status dot -->
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)]" title="System Online"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" title="System Online"></span>
                 </div>
 
                 <div class="flex gap-1.5">
                     <a 
+                        id="sidebar-storefront-btn"
                         href="index.html" 
                         target="_blank" 
-                        class="flex-1 py-2 px-2.5 bg-gradient-to-r from-amber-400/10 to-yellow-500/10 hover:from-amber-400/20 hover:to-yellow-500/20 text-amber-300 font-bold rounded-xl text-[11px] border border-amber-400/30 flex items-center justify-center gap-1.5 transition-all shadow-sm">
+                        class="flex-1 py-2 px-2.5 bg-white hover:bg-slate-100 text-slate-700 font-bold rounded-xl text-[11px] border border-slate-200 flex items-center justify-center gap-1.5 transition-all shadow-sm">
                         <span>Visit Storefront</span>
-                        <i class="fas fa-arrow-up-right-from-square text-[10px] text-amber-400"></i>
+                        <i class="fas fa-arrow-up-right-from-square text-[10px] text-slate-400"></i>
                     </a>
                     <button 
                         onclick="handleLogout()" 
-                        class="py-2 px-3 bg-red-950/40 hover:bg-red-900/50 text-red-400 font-bold rounded-xl text-xs border border-red-500/30 transition-colors"
+                        class="py-2 px-3 bg-red-50 hover:bg-red-100 text-red-600 font-bold rounded-xl text-xs transition-colors"
                         title="Logout Admin">
                         <i class="fas fa-arrow-right-from-bracket"></i>
                     </button>
@@ -602,7 +780,7 @@
         <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
 
             <!-- Top Header Bar -->
-            <header class="bg-[#080B15]/90 backdrop-blur-xl border-b border-amber-400/15 sticky top-0 z-30 px-6 py-3.5 flex items-center justify-between gap-4">
+            <header class="bg-white border-b border-slate-200 sticky top-0 z-30 px-6 py-3.5 flex items-center justify-between gap-4 transition-colors">
                 <!-- Global Search -->
                 <div class="relative w-full max-w-md">
                     <input 
@@ -610,25 +788,36 @@
                         id="global-search" 
                         oninput="orderSearchQuery = this.value; renderFullOrdersTable();"
                         placeholder="Search orders, products, customers..." 
-                        class="w-full pl-10 pr-4 py-2 rounded-2xl bg-[#0D1222] border border-amber-400/20 focus:border-amber-400 outline-none text-xs text-white placeholder-slate-500 transition-all focus:shadow-[0_0_15px_rgba(245,158,11,0.15)]"
+                        class="w-full pl-10 pr-4 py-2 rounded-2xl bg-slate-100 border border-slate-200 focus:border-slate-300 outline-none text-xs text-slate-800 placeholder-slate-400 transition-all"
                     />
-                    <i class="fas fa-search absolute left-3.5 top-3 text-amber-400/70 text-xs"></i>
+                    <i class="fas fa-search absolute left-3.5 top-3 text-slate-400 text-xs theme-search-icon"></i>
                 </div>
 
-                <!-- Right Header Actions -->
-                <div class="flex items-center gap-3">
-                    <div id="header-supabase-badge" class="hidden sm:flex items-center gap-2 text-xs font-extrabold text-emerald-400 bg-emerald-950/40 px-3 py-1.5 rounded-full border border-emerald-500/30 shadow-xs">
-                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
+                <!-- Right Header Actions (With 1-Click Dark/Light Theme Button) -->
+                <div class="flex items-center gap-2.5 sm:gap-3">
+                    
+                    <!-- 1-CLICK THEME TOGGLE BUTTON -->
+                    <button 
+                        id="admin-theme-toggle-btn" 
+                        onclick="toggleAdminTheme()" 
+                        class="theme-toggle-btn px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-2xl flex items-center gap-2 text-xs font-bold transition-all bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-sm active:scale-95 cursor-pointer"
+                        title="1-Click Switch: Dark Black Theme / Light Theme">
+                        <span id="theme-toggle-icon" class="text-sm"><i class="fas fa-moon text-amber-500"></i></span>
+                        <span id="theme-toggle-label" class="font-extrabold text-xs">Dark Mode</span>
+                    </button>
+
+                    <div id="header-supabase-badge" class="hidden sm:flex items-center gap-2 text-xs font-extrabold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-300 shadow-xs">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
                         <span>🟢 Supabase Cloud: Live</span>
                     </div>
 
-                    <div class="hidden md:flex items-center gap-2 text-xs font-semibold text-amber-300 bg-amber-950/30 px-3 py-1.5 rounded-full border border-amber-400/30">
-                        <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                    <div class="hidden md:flex items-center gap-2 text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
                         <span>Store Live & Accepting Orders</span>
                     </div>
 
                     <!-- Notification Bell -->
-                    <button onclick="switchAdminTab('notifications')" class="relative p-2.5 rounded-2xl bg-[#0D1222] hover:bg-[#12182D] text-slate-300 hover:text-amber-300 border border-amber-400/20 transition-colors" title="View Notifications">
+                    <button onclick="switchAdminTab('notifications')" class="theme-header-btn relative p-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer" title="View Notifications">
                         <i class="fas fa-bell text-sm"></i>
                         <span id="notif-badge-count" class="hidden absolute -top-1 -right-1 bg-red-500 text-white font-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
                             0
@@ -636,13 +825,13 @@
                     </button>
 
                     <!-- Owner Profile Pill -->
-                    <div class="flex items-center gap-2.5 pl-2 border-l border-amber-400/20">
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-yellow-600 text-slate-950 font-black flex items-center justify-center text-xs shadow-md shadow-amber-500/20">
+                    <div class="theme-profile-pill flex items-center gap-2 pl-2 border-l border-slate-200">
+                        <div class="w-8 h-8 rounded-full bg-amber-400 text-slate-900 font-extrabold flex items-center justify-center text-xs shadow-sm">
                             MJ
                         </div>
                         <div class="hidden sm:block text-left">
-                            <div class="text-xs font-extrabold text-white leading-none">Muhammad Jameel</div>
-                            <div class="text-[10px] text-amber-400/80 font-semibold mt-0.5">Admin (Store Founder)</div>
+                            <div class="theme-owner-name text-xs font-extrabold text-slate-800 leading-none">Muhammad Jameel</div>
+                            <div class="theme-owner-role text-[10px] text-slate-400 mt-0.5">Admin (Store Founder)</div>
                         </div>
                     </div>
                 </div>
@@ -659,14 +848,14 @@
                     <!-- Breadcrumb, Greeting & Refresh -->
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div>
-                            <div id="top-breadcrumb" class="text-[11px] font-black uppercase tracking-widest text-amber-400/80 mb-1 flex items-center gap-1.5">
-                                <i class="fas fa-crown text-[10px] text-amber-400"></i>
-                                <span>MEHAR TOYS / ROYAL EXECUTIVE DASHBOARD</span>
+                            <div id="top-breadcrumb" class="text-[11px] font-black uppercase tracking-widest text-slate-500 mb-1 flex items-center gap-1.5 transition-colors">
+                                <i class="fas fa-crown text-[10px] text-amber-500"></i>
+                                <span>MEHAR TOYS / DASHBOARD</span>
                             </div>
-                            <h2 id="admin-greeting-text" class="text-2xl sm:text-3xl font-black text-white font-heading">
-                                Good Morning, <span class="bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 bg-clip-text text-transparent font-extrabold">Muhammad Jameel</span>
+                            <h2 id="admin-greeting-text" class="text-2xl sm:text-3xl font-black text-slate-900 font-heading transition-colors">
+                                Good Morning, <span class="text-red-500 font-extrabold">Muhammad Jameel</span>
                             </h2>
-                            <p class="text-xs text-slate-400 mt-0.5">Executive overview & performance of MEHAR TOYS today.</p>
+                            <p id="top-greeting-sub" class="text-xs text-slate-500 mt-0.5 transition-colors">Executive overview & performance of MEHAR TOYS today.</p>
                         </div>
 
                         <div class="flex items-center flex-wrap gap-2.5 self-start sm:self-auto">
